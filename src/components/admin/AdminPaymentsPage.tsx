@@ -1,9 +1,9 @@
 
 import React from 'react';
-import SimplePaymentManager from './SimplePaymentManager';
+import EnhancedPaymentDashboard from './EnhancedPaymentDashboard';
 
 const AdminPaymentsPage = () => {
-  return <SimplePaymentManager />;
+  return <EnhancedPaymentDashboard />;
 };
 
 export default AdminPaymentsPage;

@@ -45,7 +45,7 @@ const AdminAnalytics = () => {
     },
     {
       title: 'Total Orders',
-      value: stats.totalOrders || 0,
+      value: orders?.length || 0,
       change: '+12%',
       changeType: 'positive' as const,
       icon: ShoppingCart,
@@ -127,9 +127,9 @@ const AdminAnalytics = () => {
           })(),
         },
         orderMetrics: {
-          avgOrderValue: Math.round((stats.totalRevenue || 0) / Math.max(stats.totalOrders || 1, 1)),
+          avgOrderValue: Math.round((stats.totalRevenue || 0) / Math.max(orders?.length || 1, 1)),
           fulfillmentRate: orders?.length > 0 ? Math.round((orders.filter(o => ['delivered', 'completed'].includes(o.status || '')).length / orders.length) * 100) : 0,
-          avgOrdersPerBuyer: Math.round((stats.totalOrders || 0) / Math.max(stats.activeBuyers || 1, 1)),
+          avgOrdersPerBuyer: Math.round((orders?.length || 0) / Math.max(stats.activeBuyers || 1, 1)),
         }
       };
 
@@ -461,17 +461,17 @@ const AdminAnalytics = () => {
                     <Users className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 flex-shrink-0" />
                   </Button>
                   
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-between p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors h-auto"
-                    onClick={() => setSelectedAnalyticsType('total-orders')}
-                  >
-                    <div className="text-left flex-1">
-                      <p className="text-sm font-medium text-purple-800">Total Orders</p>
-                      <p className="text-xl sm:text-2xl font-bold text-purple-900">{(stats.totalOrders || 0).toLocaleString()}</p>
-                    </div>
-                    <Package className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 flex-shrink-0" />
-                  </Button>
+                   <Button 
+                     variant="ghost" 
+                     className="w-full justify-between p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors h-auto"
+                     onClick={() => setSelectedAnalyticsType('total-orders')}
+                   >
+                     <div className="text-left flex-1">
+                       <p className="text-sm font-medium text-purple-800">Total Orders</p>
+                       <p className="text-xl sm:text-2xl font-bold text-purple-900">{(orders?.length || 0).toLocaleString()}</p>
+                     </div>
+                     <Package className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 flex-shrink-0" />
+                   </Button>
                 </div>
               </CardContent>
             </Card>
@@ -665,7 +665,8 @@ const AdminAnalytics = () => {
               orderId: order.id,
               date: order.created_at,
               amount: order.total_amount,
-              platformFee: Math.round((order.total_amount || 0) * 0.15)
+              platformFee: Math.round((order.total_amount || 0) * 0.15),
+              productName: order.product?.name || 'Unknown Product'
             })) || [],
             topFarmers: [], // This would need to be calculated from actual farmer data
             orderDistribution: [

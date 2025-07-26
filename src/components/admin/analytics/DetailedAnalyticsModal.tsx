@@ -69,6 +69,9 @@ const DetailedAnalyticsModal = ({ isOpen, onClose, title, data, type }: Detailed
                   <div>
                     <p className="font-medium">Order #{order.orderId?.slice(-8)}</p>
                     <p className="text-sm text-muted-foreground">{new Date(order.date).toLocaleDateString()}</p>
+                    {order.productName && (
+                      <p className="text-xs text-muted-foreground">Product: {order.productName}</p>
+                    )}
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">₹{order.platformFee?.toLocaleString()}</p>

@@ -139,8 +139,8 @@ const EnhancedPaymentDashboard = () => {
 
   const pendingPayments = payments.filter(p => p.status === 'pending');
   const completedPayments = payments.filter(p => p.status === 'paid_to_farmer' || p.status === 'completed');
-  const buyerPayments = payments.filter(p => p.buyer_id);
-  const collectionPayments = payments.filter(p => !p.buyer_id && p.payment_method === 'instant_collection_payment');
+  const buyerPayments = payments.filter(p => p.buyer && p.buyer.full_name);
+  const collectionPayments = payments.filter(p => p.payment_method === 'instant_collection_payment');
 
   // Calculate stats like collections dashboard
   const totalValue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);

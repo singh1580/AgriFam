@@ -45,7 +45,7 @@ const AdminAnalytics = () => {
     },
     {
       title: 'Total Orders',
-      value: stats.totalOrders || 0,
+      value: orders?.length || 0,
       change: '+12%',
       changeType: 'positive' as const,
       icon: ShoppingCart,

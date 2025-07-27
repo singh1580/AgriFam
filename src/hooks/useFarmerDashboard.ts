@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFarmerProducts } from '@/hooks/useProductsData';
 import { supabase } from '@/integrations/supabase/client';
 
-export type DashboardSection = 'dashboard' | 'products' | 'notifications';
+export type DashboardSection = 'dashboard' | 'products' | 'notifications' | 'feedback';
 
 export interface RealFarmerProduct {
   id: string;

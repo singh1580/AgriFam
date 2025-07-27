@@ -10,13 +10,14 @@ import {
   History, 
   Bell,
   Home,
-  LogOut
+  LogOut,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications';
+type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications' | 'feedback';
 
 interface BuyerDashboardSidebarProps {
   activeSection: DashboardSection;
@@ -85,6 +86,12 @@ const BuyerDashboardSidebar = ({
       icon: Bell,
       description: 'Updates & alerts',
       badge: unreadNotifications > 0 ? unreadNotifications : undefined
+    },
+    {
+      id: 'feedback' as const,
+      label: 'Feedback',
+      icon: MessageSquare,
+      description: 'Share feedback'
     }
   ];
 

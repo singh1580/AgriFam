@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Home, Package, Bell, Shield, ExternalLink, LogOut, Sparkles } from 'lucide-react';
+import { Home, Package, Bell, Shield, ExternalLink, LogOut, Sparkles, MessageSquare } from 'lucide-react';
 import { DashboardSection } from '@/hooks/useFarmerDashboard';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -34,7 +34,8 @@ const FarmerDashboardSidebar = ({
   const navigationItems: NavigationItem[] = [
     { key: 'dashboard', label: 'Dashboard', icon: Home },
     { key: 'products', label: 'My Products', icon: Package },
-    { key: 'notifications', label: 'Notifications', icon: Bell, badge: unreadNotifications }
+    { key: 'notifications', label: 'Notifications', icon: Bell, badge: unreadNotifications },
+    { key: 'feedback', label: 'Feedback', icon: MessageSquare }
   ];
 
   const handleSignOut = async () => {

@@ -26,6 +26,7 @@ import {
   BarChart3,
   Settings,
   LogOut,
+  MessageSquare,
 } from 'lucide-react';
 import { useOptimizedAdminData } from '@/hooks/useOptimizedAdminData';
 import { Button } from '@/components/ui/button';
@@ -89,6 +90,12 @@ const navigationItems = [
     icon: Settings,
     path: '/admin-dashboard/settings',
   },
+  {
+    key: 'feedback',
+    label: 'User Feedback',
+    icon: MessageSquare,
+    path: '/admin-dashboard/feedback',
+  },
 ];
 
 export const AdminSidebar = () => {
@@ -109,6 +116,7 @@ export const AdminSidebar = () => {
     if (path.includes('/analytics')) return 'analytics';
     if (path.includes('/notifications') || path.includes('/communications')) return 'notifications';
     if (path.includes('/settings')) return 'settings';
+    if (path.includes('/feedback')) return 'feedback';
     return 'dashboard';
   };
 

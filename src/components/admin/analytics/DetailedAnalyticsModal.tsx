@@ -183,6 +183,56 @@ const DetailedAnalyticsModal = ({ isOpen, onClose, title, data, type }: Detailed
           </div>
         );
         
+      case 'total_orders':
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Package className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total Orders</p>
+                      <p className="text-xl font-bold">{data.totalOrders}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <DollarSign className="h-5 w-5 text-green-600" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total Value</p>
+                      <p className="text-xl font-bold">₹{data.totalValue?.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              <h3 className="font-semibold">Recent Orders</h3>
+              {data.orders?.slice(0, 10).map((order: any, index: number) => (
+                <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                  <div>
+                    <p className="font-medium">Order #{order.id?.slice(-8)}</p>
+                    <p className="text-sm text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Product: {order.product?.name || 'Product'} | 
+                      Buyer: {order.buyer?.full_name || 'Buyer'}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">₹{order.total_amount?.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">{order.status}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+        
       default:
         return null;
     }

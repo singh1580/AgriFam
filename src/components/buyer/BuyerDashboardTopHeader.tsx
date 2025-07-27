@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Menu, 
@@ -16,8 +16,10 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import BuyerProfileDropdown from './BuyerProfileDropdown';
+import BuyerSettingsModal from './BuyerSettingsModal';
+import UserProfileModal from './UserProfileModal';
 
-type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications';
+type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications' | 'feedback';
 
 interface BuyerDashboardTopHeaderProps {
   setSidebarOpen: (open: boolean) => void;
@@ -33,9 +35,19 @@ const BuyerDashboardTopHeader = ({
   activeSection 
 }: BuyerDashboardTopHeaderProps) => {
   const navigate = useNavigate();
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const handleGoHome = () => {
     navigate('/');
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleProfileClick = () => {
+    setShowProfileModal(true);
   };
 
   const getSectionLabel = (section: DashboardSection) => {
@@ -95,8 +107,8 @@ const BuyerDashboardTopHeader = ({
           {/* Right section - Enhanced Profile Dropdown */}
           <div className="flex items-center gap-3">
             <BuyerProfileDropdown 
-              onSettingsClick={() => {}} 
-              onProfileClick={() => {}} 
+              onSettingsClick={handleSettingsClick}
+              onProfileClick={handleProfileClick}
             />
           </div>
         </div>
@@ -154,6 +166,16 @@ const BuyerDashboardTopHeader = ({
 
       {/* Subtle bottom border with gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-crop-green/30 to-transparent"></div>
+
+      {/* Modals */}
+      <BuyerSettingsModal 
+        isOpen={showSettingsModal} 
+        onClose={() => setShowSettingsModal(false)} 
+      />
+      <UserProfileModal 
+        isOpen={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </div>
   );
 };

@@ -668,6 +668,8 @@ const AdminAnalytics = () => {
               platformFee: Math.round((order.total_amount || 0) * 0.15),
               productName: order.product?.name || 'Unknown Product'
             })) || [],
+            orders: orders || [],
+            totalValue: stats.totalRevenue || 0,
             topFarmers: [], // This would need to be calculated from actual farmer data
             orderDistribution: [
               { range: '₹0 - ₹1,000', count: orders?.filter(o => (o.total_amount || 0) <= 1000).length || 0, percentage: Math.round(((orders?.filter(o => (o.total_amount || 0) <= 1000).length || 0) / Math.max(orders?.length || 1, 1)) * 100) },

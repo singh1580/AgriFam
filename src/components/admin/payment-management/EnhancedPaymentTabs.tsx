@@ -91,8 +91,8 @@ const EnhancedPaymentTabs = ({
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
               <div>
-                <span className="font-medium">Farmer:</span>
-                <p>{payment.farmer?.full_name}</p>
+                <span className="font-medium">{payment.buyer_id ? 'Buyer' : 'Farmer'}:</span>
+                <p>{payment.buyer_id ? payment.buyer?.full_name : payment.farmer?.full_name}</p>
               </div>
               <div>
                 <span className="font-medium">Amount:</span>
@@ -104,7 +104,7 @@ const EnhancedPaymentTabs = ({
               </div>
               <div>
                 <span className="font-medium">Type:</span>
-                <p>{payment.buyer_id ? 'Order Payment' : 'Collection Payment'}</p>
+                <p>{payment.buyer_id ? `Order Payment (${payment.order?.product?.name || 'Product'})` : 'Collection Payment'}</p>
               </div>
             </div>
           </div>
@@ -200,11 +200,22 @@ const EnhancedPaymentTabs = ({
           </TabsContent>
 
           <TabsContent value="buyers" className="space-y-4 mt-0">
-            <div className="space-y-3">
-              {buyerPayments.map((payment) => (
-                <PaymentCard key={payment.id} payment={payment} />
-              ))}
-            </div>
+            {buyerPayments.length === 0 ? (
+              <div className="text-center py-8">
+                <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No buyer payments found</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <h3 className="font-semibold text-blue-900 mb-1">Buyer Order Payments</h3>
+                  <p className="text-sm text-blue-700">Payments from buyers for placed orders with product details</p>
+                </div>
+                {buyerPayments.map((payment) => (
+                  <PaymentCard key={payment.id} payment={payment} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="all" className="space-y-4 mt-0">

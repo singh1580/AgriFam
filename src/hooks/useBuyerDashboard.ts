@@ -4,7 +4,7 @@ import { useAggregatedProducts } from './useAggregatedProducts';
 import { useOptimizedBuyerOrders } from './useOptimizedBuyerOrders';
 import { useOptimizedBuyerNotifications } from './useOptimizedBuyerNotifications';
 
-type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications';
+type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications' | 'feedback';
 type SortOption = 'relevance' | 'price-low' | 'price-high' | 'newest';
 
 export const useBuyerDashboard = () => {

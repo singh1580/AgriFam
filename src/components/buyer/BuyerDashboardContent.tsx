@@ -9,8 +9,9 @@ const AggregatedProductGrid = React.lazy(() => import('./AggregatedProductGrid')
 const OrderTrackingSection = React.lazy(() => import('./OrderTrackingSection'));
 const OrderHistorySection = React.lazy(() => import('./OrderHistorySection'));
 const NotificationCenter = React.lazy(() => import('./NotificationCenter'));
+const FeedbackSubmissionModal = React.lazy(() => import('@/components/feedback/FeedbackSubmissionModal'));
 
-type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications';
+type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications' | 'feedback';
 
 interface AggregatedProduct {
   id: string;
@@ -161,6 +162,14 @@ const BuyerDashboardContent = React.memo(({
                 isLoading={notificationsLoading}
                 isMarkingAllAsRead={isMarkingAllAsRead}
               />
+            </Suspense>
+          </div>
+        );
+      case 'feedback':
+        return (
+          <div className="animate-fade-in">
+            <Suspense fallback={<StatsSkeleton />}>
+              <FeedbackSubmissionModal isOpen={true} onClose={() => {}} userType="buyer" />
             </Suspense>
           </div>
         );

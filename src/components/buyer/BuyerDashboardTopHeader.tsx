@@ -60,6 +60,8 @@ const BuyerDashboardTopHeader = ({
         return 'Order History';
       case 'notifications':
         return 'Notifications';
+      case 'feedback':
+        return 'Feedback';
       default:
         return 'Dashboard';
     }

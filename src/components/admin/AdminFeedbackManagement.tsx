@@ -34,7 +34,7 @@ const AdminFeedbackManagement = () => {
   const [responseText, setResponseText] = useState('');
   const [submittingResponse, setSubmittingResponse] = useState(false);
 
-  // Fetch all feedback from notifications
+  // Fetch all feedback from notifications (temporary until feedback table is set up)
   const { data: feedbacks = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-feedback'],
     queryFn: async () => {
@@ -149,7 +149,7 @@ const AdminFeedbackManagement = () => {
     try {
       const feedback = feedbacks.find(f => f.id === feedbackId);
       
-      // Mark feedback as resolved and send response notification
+      // Mark feedback as resolved
       const { error: updateError } = await supabase
         .from('notifications')
         .update({ 
@@ -160,12 +160,17 @@ const AdminFeedbackManagement = () => {
       if (updateError) throw updateError;
 
       // Send notification to user
-      await supabase.rpc('send_notification', {
-        p_user_id: feedback?.user_id,
-        p_title: 'Feedback Response',
-        p_message: `Admin has responded to your feedback: "${feedback?.subject}"`,
-        p_type: 'admin_message'
-      });
+      const { error: notificationError } = await supabase
+        .from('notifications')
+        .insert({
+          user_id: feedback?.user_id,
+          title: 'Feedback Response',
+          message: `Admin has responded to your feedback: "${feedback?.subject}"\n\nResponse: ${responseText}`,
+          type: 'admin_message',
+          read: false
+        });
+
+      if (notificationError) throw notificationError;
 
       queryClient.invalidateQueries({ queryKey: ['admin-feedback'] });
       setResponseText('');

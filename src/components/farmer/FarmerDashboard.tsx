@@ -1,6 +1,6 @@
 
+import React, { memo, useCallback, Suspense } from 'react';
 import { Package, DollarSign, Clock, CheckCircle } from 'lucide-react';
-import { memo, useCallback, Suspense } from 'react';
 import AnimatedBackground from '@/components/ui/animated-background';
 import FarmerStats from './FarmerStats';
 import QuickActionsGrid from './QuickActionsGrid';
@@ -12,6 +12,8 @@ import { StatsSkeleton } from '@/components/ui/dashboard-skeleton';
 import { useFarmerDashboard } from '@/hooks/useFarmerDashboard';
 import { useFarmerNotifications } from '@/hooks/useFarmerNotifications';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceOptimization';
+
+const FeedbackSection = React.lazy(() => import('@/components/feedback/FeedbackSection'));
 
 const FarmerDashboard = () => {
   usePerformanceMonitor('FarmerDashboard');
@@ -58,6 +60,14 @@ const FarmerDashboard = () => {
             isLoading={notificationsLoading}
             error={notificationsError}
           />
+        );
+      case 'feedback':
+        return (
+          <div className="animate-fade-in">
+            <Suspense fallback={<StatsSkeleton />}>
+              <FeedbackSection userType="farmer" />
+            </Suspense>
+          </div>
         );
       default:
         return null;

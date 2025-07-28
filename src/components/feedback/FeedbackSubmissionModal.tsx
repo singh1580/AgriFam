@@ -51,7 +51,7 @@ const FeedbackSubmissionModal = ({ isOpen, onClose, userType }: FeedbackSubmissi
 
     setLoading(true);
     try {
-      // Store feedback as a notification with structured data
+      // Store feedback as structured notification (only for admins)
       const feedbackData = {
         subject: formData.subject,
         category: formData.category,
@@ -62,18 +62,30 @@ const FeedbackSubmissionModal = ({ isOpen, onClose, userType }: FeedbackSubmissi
         timestamp: new Date().toISOString()
       };
 
-      // Send structured feedback as notification
-      const { error } = await supabase
-        .from('notifications')
-        .insert({
-          user_id: user?.id,
-          title: `${userType.charAt(0).toUpperCase() + userType.slice(1)} Feedback: ${formData.subject}`,
-          message: JSON.stringify(feedbackData),
-          type: 'admin_message',
-          read: false
-        });
+      // Get all admin users and send notification only to them
+      const { data: adminUsers, error: adminError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('role', 'admin');
 
-      if (error) throw error;
+      if (adminError) throw adminError;
+
+      // Send notification to each admin
+      const notifications = adminUsers?.map(admin => ({
+        user_id: admin.id,
+        title: `${userType.charAt(0).toUpperCase() + userType.slice(1)} Feedback: ${formData.subject}`,
+        message: JSON.stringify(feedbackData),
+        type: 'admin_message' as const,
+        read: false
+      }));
+
+      if (notifications && notifications.length > 0) {
+        const { error } = await supabase
+          .from('notifications')
+          .insert(notifications);
+
+        if (error) throw error;
+      }
 
       toast({
         title: "Feedback Submitted",

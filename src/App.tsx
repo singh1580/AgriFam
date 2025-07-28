@@ -20,6 +20,7 @@ import EnhancedNotificationSystem from "./components/admin/EnhancedNotificationS
 import AdminUserManagement from "./components/admin/AdminUserManagement";
 import AdminAnalytics from "./components/admin/AdminAnalytics";
 import AdminSettings from "./components/admin/AdminSettings";
+import AdminFeedbackManagement from "./components/admin/AdminFeedbackManagement";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -79,6 +80,7 @@ const App = () => (
                 <Route path="analytics" element={<AdminAnalytics />} />
                 <Route path="notifications" element={<EnhancedNotificationSystem />} />
                 <Route path="communications" element={<EnhancedNotificationSystem />} />
+                <Route path="feedback" element={<AdminFeedbackManagement />} />
                 <Route path="settings" element={<AdminSettings />} />
               </Route>
               

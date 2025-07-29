@@ -3,13 +3,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useFarmerEarningsData } from '@/hooks/useFarmerEarningsData';
 import { 
   DollarSign, 
   TrendingUp, 
   Calendar,
   Package,
   Users,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
 
 interface DetailedAnalyticsModalProps {
@@ -21,6 +23,8 @@ interface DetailedAnalyticsModalProps {
 }
 
 const DetailedAnalyticsModal = ({ isOpen, onClose, title, data, type }: DetailedAnalyticsModalProps) => {
+  const { data: farmerEarningsData, isLoading: isLoadingFarmers } = useFarmerEarningsData();
+
   const renderContent = () => {
     switch (type) {
       case 'revenue':
@@ -167,18 +171,32 @@ const DetailedAnalyticsModal = ({ isOpen, onClose, title, data, type }: Detailed
             
             <div className="space-y-2 max-h-96 overflow-y-auto">
               <h3 className="font-semibold">Top Earning Farmers</h3>
-              {data.topFarmers?.map((farmer: any, index: number) => (
-                <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                  <div>
-                    <p className="font-medium">{farmer.name}</p>
-                    <p className="text-sm text-muted-foreground">{farmer.location}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-green-600">₹{farmer.earnings?.toLocaleString()}</p>
-                    <p className="text-sm text-muted-foreground">{farmer.orders} orders</p>
-                  </div>
+              {isLoadingFarmers ? (
+                <div className="flex items-center justify-center p-4">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span className="text-sm text-muted-foreground">Loading farmer data...</span>
                 </div>
-              ))}
+              ) : farmerEarningsData?.topFarmers && farmerEarningsData.topFarmers.length > 0 ? (
+                farmerEarningsData.topFarmers.map((farmer: any, index: number) => (
+                  <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                    <div>
+                      <p className="font-medium">{farmer.name}</p>
+                      <p className="text-sm text-muted-foreground">{farmer.email}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-green-600">₹{farmer.totalEarnings?.toLocaleString()}</p>
+                      <p className="text-sm text-muted-foreground">{farmer.orders} orders</p>
+                      <div className="text-xs text-muted-foreground">
+                        Paid: ₹{farmer.paidEarnings?.toLocaleString()} | Pending: ₹{farmer.pendingEarnings?.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-muted-foreground">
+                  No farmer earnings data available
+                </div>
+              )}
             </div>
           </div>
         );

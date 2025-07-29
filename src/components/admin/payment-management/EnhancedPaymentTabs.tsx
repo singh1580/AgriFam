@@ -39,7 +39,7 @@ interface EnhancedPaymentTabsProps {
   pendingPayments: Payment[];
   completedPayments: Payment[];
   buyerPayments: Payment[];
-  collectionPayments: Payment[];
+  farmerPayments: Payment[];
   selectedPayments: string[];
   processing: string | null;
   onToggleSelection: (paymentId: string) => void;
@@ -51,7 +51,7 @@ const EnhancedPaymentTabs = ({
   pendingPayments,
   completedPayments,
   buyerPayments,
-  collectionPayments,
+  farmerPayments,
   selectedPayments,
   processing,
   onToggleSelection,

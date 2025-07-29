@@ -21,6 +21,7 @@ import AdminUserManagement from "./components/admin/AdminUserManagement";
 import AdminAnalytics from "./components/admin/AdminAnalytics";
 import AdminSettings from "./components/admin/AdminSettings";
 import AdminFeedbackManagement from "./components/admin/AdminFeedbackManagement";
+import { AdminErrorBoundary } from "./components/admin/AdminErrorBoundary";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -68,7 +69,9 @@ const App = () => (
               {/* Admin dashboard with nested routes */}
               <Route path="/admin-dashboard" element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminLayout />
+                  <AdminErrorBoundary>
+                    <AdminLayout />
+                  </AdminErrorBoundary>
                 </ProtectedRoute>
               }>
                 <Route index element={<AdminDashboard />} />

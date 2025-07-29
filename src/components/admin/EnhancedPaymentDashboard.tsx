@@ -139,8 +139,20 @@ const EnhancedPaymentDashboard = () => {
 
   const pendingPayments = payments.filter(p => p.status === 'pending');
   const completedPayments = payments.filter(p => p.status === 'paid_to_farmer' || p.status === 'completed');
-  const buyerPayments = payments.filter(p => p.buyer && p.buyer.full_name && p.order?.product?.name);
-  const collectionPayments = payments.filter(p => !p.buyer_id && p.payment_method === 'instant_collection_payment');
+  // Fixed payment filtering for aggregated products
+  const buyerPayments = payments.filter(p => 
+    p.buyer_id && 
+    p.buyer && 
+    p.order?.product?.name &&
+    p.payment_method !== 'instant_collection_payment'
+  );
+  
+  // Farmer payments should be for aggregated collections
+  const farmerPayments = payments.filter(p => 
+    p.farmer_id && 
+    p.farmer && 
+    (p.payment_method === 'instant_collection_payment' || p.order?.product?.name)
+  );
 
   // Calculate stats like collections dashboard
   const totalValue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
@@ -268,7 +280,7 @@ const EnhancedPaymentDashboard = () => {
               pendingPayments={pendingPayments}
               completedPayments={completedPayments}
               buyerPayments={buyerPayments}
-              collectionPayments={collectionPayments}
+              farmerPayments={farmerPayments}
               selectedPayments={selectedPayments}
               processing={processing}
               onToggleSelection={togglePaymentSelection}

@@ -34,7 +34,7 @@ const AdminFeedbackManagement = () => {
   const [responseText, setResponseText] = useState('');
   const [submittingResponse, setSubmittingResponse] = useState(false);
 
-  // Fetch all feedback from notifications (temporary until feedback table is set up)
+  // Fetch all feedback from notifications
   const { data: feedbacks = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-feedback'],
     queryFn: async () => {
@@ -42,45 +42,55 @@ const AdminFeedbackManagement = () => {
         .from('notifications')
         .select(`
           *,
-          user:profiles(full_name, email)
+          profiles!user_id(full_name, email, role)
         `)
         .eq('type', 'admin_message')
-        .like('title', '%Feedback:%')
+        .or('title.ilike.%Feedback:%,title.ilike.%feedback%')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Feedback fetch error:', error);
+        throw error;
+      }
       
       // Parse feedback data from notifications
       return (data || []).map(notification => {
         try {
-          const feedbackData = JSON.parse(notification.message);
+          let feedbackData;
+          try {
+            feedbackData = JSON.parse(notification.message);
+          } catch {
+            feedbackData = { description: notification.message };
+          }
+          
           return {
             id: notification.id,
             user_id: notification.user_id,
-            user: notification.user,
-            subject: feedbackData.subject || notification.title.replace(/^(Buyer|Farmer) Feedback: /, ''),
+            user: notification.profiles || { full_name: 'Unknown User', email: 'unknown@email.com' },
+            subject: feedbackData.subject || notification.title.replace(/^(Buyer|Farmer) Feedback: /, '') || 'Feedback',
             category: feedbackData.category || 'general_feedback',
             priority: feedbackData.priority || 'medium',
-            description: feedbackData.description || notification.message,
+            description: feedbackData.description || notification.message || 'No description provided',
             rating: feedbackData.rating || 5,
             status: notification.read ? 'resolved' : 'pending',
-            user_type: feedbackData.userType || 'buyer',
+            user_type: feedbackData.userType || (notification.title?.includes('Buyer') ? 'buyer' : 'farmer'),
             created_at: notification.created_at,
             admin_response: null
           };
-        } catch {
-          // Fallback for non-JSON messages
+        } catch (parseError) {
+          console.error('Error parsing feedback notification:', parseError);
+          // Return minimal fallback
           return {
             id: notification.id,
             user_id: notification.user_id,
-            user: notification.user,
-            subject: notification.title.replace(/^(Buyer|Farmer) Feedback: /, ''),
+            user: { full_name: 'Unknown User', email: 'unknown@email.com' },
+            subject: 'Feedback Submission',
             category: 'general_feedback',
             priority: 'medium',
-            description: notification.message,
+            description: notification.message || 'No description available',
             rating: 5,
             status: notification.read ? 'resolved' : 'pending',
-            user_type: notification.title.includes('Buyer') ? 'buyer' : 'farmer',
+            user_type: 'buyer',
             created_at: notification.created_at,
             admin_response: null
           };
@@ -207,14 +217,11 @@ const AdminFeedbackManagement = () => {
   if (isLoading) {
     return (
       <div className="space-y-6 p-4 sm:p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-20 bg-muted rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex items-center justify-center min-h-[200px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading feedback data...</p>
+          </div>
         </div>
       </div>
     );

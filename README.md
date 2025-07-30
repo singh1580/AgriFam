@@ -1,73 +1,46 @@
-# Welcome to your Lovable project
+## About AgriLink Direct
 
-## Project info
+AgriLink Direct is a comprehensive agricultural trading platform designed to connect farmers directly with buyers, eliminating intermediaries and fostering a more transparent and profitable ecosystem for both parties.
 
-**URL**: https://lovable.dev/projects/2c1b05f5-ee7a-459c-a4a2-ec7b7a18c8e0
+**Our Mission:**
 
-## How can I edit this code?
+Our core mission is to empower farmers by providing them with a direct channel to market their produce, ensuring fair prices and timely payments. We strive to improve the economic condition of farmers across India and build a sustainable agricultural supply chain.
 
-There are several ways of editing your application.
+**Key Features:**
 
-**Use Lovable**
+*   **Farmer Dashboard:** A dedicated dashboard for farmers to manage their products, track earnings, view collection schedules, and stay informed through notifications.
+*   **Product Management (Farmer):** Farmers can easily list their produce, provide details, and manage their inventory.
+*   **Product Submission and Approval:** A streamlined process for farmers to submit new products for listing, with an admin approval workflow to maintain quality and standards.
+*   **Collection Schedule Management:** Tools for managing the logistics of product collection from farmers.
+*   **Buyer Marketplace:** A user-friendly interface for buyers to browse and search for agricultural products.
+*   **Aggregated Product View:** Products can be viewed individually or in aggregated formats for easier browsing and purchasing.
+*   **Order Management (Buyer):** Buyers can place orders, track their status in real-time, and view their order history.
+*   **Payment Processing:** The platform facilitates secure and timely payments between buyers and farmers, including support for a dual payment system.
+*   **Admin Panel:** A robust administrative dashboard for managing users, orders, payments, products, analytics, notifications, and platform settings.
+*   **User Management:** Admins can manage user accounts, roles, and activity.
+*   **Analytics and Reporting:** The admin panel provides insights into platform performance, transaction volume, and user activity.
+*   **Notification System:** A comprehensive notification system to keep users informed about important updates, order status changes, and relevant information.
+*   **Communication Tools:** Features for facilitating communication between platform users and administrators.
+*   **Feedback System:** A mechanism for users to provide feedback and suggestions.
+*   **Responsive User Interface:** The platform is designed with a responsive UI using a component library (likely Shadcn UI) to ensure a seamless experience across devices.
+*   **Secure and Scalable Backend:** Utilizing Supabase for a secure and scalable backend, including authentication, database management, and real-time updates.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2c1b05f5-ee7a-459c-a4a2-ec7b7a18c8e0) and start prompting.
+**How it Works:**
 
-Changes made via Lovable will be committed automatically to this repo.
+1.  **User Registration and Authentication:** Users (farmers, buyers, or admins) sign up and log in to the platform.
+2.  **Role-Based Access:** Users are directed to their respective dashboards based on their roles.
+3.  **Farmer Activities:** Farmers list their products, manage inventory, and track their earnings.
+4.  **Buyer Activities:** Buyers browse products, place orders, and track deliveries.
+5.  **Admin Oversight:** Admins monitor platform activity, manage users and orders, approve products, and access analytics.
+6.  **Data Flow:** Data is managed and accessed through the Supabase backend, with real-time updates where necessary.
+7.  **User Interaction:** The user interface facilitates interactions between farmers, buyers, and the platform.
 
-**Use your preferred IDE**
+**Our Impact (based on available data):**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+*   Currently connects 15,000+ farmers.
+*   Handles ₹50 lakh+ transactions monthly.
+*   Our goal is to expand our reach to every farmer in India and significantly improve their economic condition.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+This section provides a detailed overview of your project. You can copy and paste this into your `README.md` file.
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/2c1b05f5-ee7a-459c-a4a2-ec7b7a18c8e0) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Would you like me to add this content to your `README.md` file for you?

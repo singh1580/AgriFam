@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Home, Package, Bell } from 'lucide-react';
+import { Home, Package, Bell, MessageSquare } from 'lucide-react';
 import { DashboardSection } from '@/hooks/useFarmerDashboard';
 
 interface FarmerBreadcrumbProps {
@@ -22,6 +22,8 @@ const FarmerBreadcrumb = ({ activeSection }: FarmerBreadcrumbProps) => {
         return { label: 'My Products', icon: Package };
       case 'notifications':
         return { label: 'Notifications', icon: Bell };
+      case 'feedback':
+        return { label: 'Feedback', icon: MessageSquare };
       case 'dashboard':
       default:
         return { label: 'Dashboard', icon: Home };

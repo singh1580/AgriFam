@@ -91,20 +91,25 @@ const EnhancedPaymentTabs = ({
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
               <div>
-                <span className="font-medium">{payment.buyer_id ? 'Buyer' : 'Farmer'}:</span>
-                <p>{payment.buyer_id ? payment.buyer?.full_name : payment.farmer?.full_name}</p>
+                <span className="font-medium">From/To:</span>
+                <p>{payment.buyer?.full_name || payment.farmer?.full_name || 'N/A'}</p>
               </div>
               <div>
                 <span className="font-medium">Amount:</span>
-                <p className="font-bold text-green-600">₹{payment.farmer_amount?.toLocaleString()}</p>
+                <p className="font-bold text-green-600">₹{(payment.farmer_amount || payment.amount)?.toLocaleString()}</p>
               </div>
               <div>
                 <span className="font-medium">Date:</span>
                 <p>{format(new Date(payment.created_at), 'MMM dd, yyyy')}</p>
               </div>
               <div>
-                <span className="font-medium">Type:</span>
-                <p>{payment.buyer_id ? `Order Payment (${payment.order?.product?.name || 'Product'})` : 'Collection Payment'}</p>
+                <span className="font-medium">Direction:</span>
+                <p className="text-sm">
+                  {payment.status === 'paid_to_farmer' ? 
+                    `Payment TO Farmer (${payment.farmer?.full_name})` : 
+                    `Payment FROM Buyer (${payment.buyer?.full_name})`
+                  }
+                </p>
               </div>
             </div>
           </div>
@@ -192,11 +197,22 @@ const EnhancedPaymentTabs = ({
           </TabsContent>
 
           <TabsContent value="farmers" className="space-y-4 mt-0">
-            <div className="space-y-3">
-              {payments.filter(p => p.farmer_id).map((payment) => (
-                <PaymentCard key={payment.id} payment={payment} />
-              ))}
-            </div>
+            {farmerPayments.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No farmer payments found</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                  <h3 className="font-semibold text-green-900 mb-1">Farmer Payments</h3>
+                  <p className="text-sm text-green-700">Payments made to farmers for their products (status: paid_to_farmer)</p>
+                </div>
+                {farmerPayments.map((payment) => (
+                  <PaymentCard key={payment.id} payment={payment} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="buyers" className="space-y-4 mt-0">
@@ -209,7 +225,7 @@ const EnhancedPaymentTabs = ({
               <div className="space-y-3">
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <h3 className="font-semibold text-blue-900 mb-1">Buyer Order Payments</h3>
-                  <p className="text-sm text-blue-700">Payments from buyers for placed orders with product details</p>
+                  <p className="text-sm text-blue-700">Incoming payments from buyers for orders (before processing to farmers)</p>
                 </div>
                 {buyerPayments.map((payment) => (
                   <PaymentCard key={payment.id} payment={payment} />

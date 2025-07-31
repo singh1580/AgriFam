@@ -105,9 +105,11 @@ const EnhancedPaymentTabs = ({
               <div>
                 <span className="font-medium">Direction:</span>
                 <p className="text-sm">
-                  {payment.status === 'paid_to_farmer' ? 
-                    `Payment TO Farmer (${payment.farmer?.full_name})` : 
-                    `Payment FROM Buyer (${payment.buyer?.full_name})`
+                  {payment.farmer_id && payment.status === 'paid_to_farmer' ? 
+                    `TO Farmer: ${payment.farmer?.full_name}` : 
+                    payment.buyer_id ? 
+                    `FROM Buyer: ${payment.buyer?.full_name}` :
+                    'Unknown Direction'
                   }
                 </p>
               </div>
@@ -205,8 +207,8 @@ const EnhancedPaymentTabs = ({
             ) : (
               <div className="space-y-3">
                 <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                  <h3 className="font-semibold text-green-900 mb-1">Farmer Payments</h3>
-                  <p className="text-sm text-green-700">Payments made to farmers for their products (status: paid_to_farmer)</p>
+                  <h3 className="font-semibold text-green-900 mb-1">Payments TO Farmers</h3>
+                  <p className="text-sm text-green-700">Collection payments made to farmers when admin collects their products</p>
                 </div>
                 {farmerPayments.map((payment) => (
                   <PaymentCard key={payment.id} payment={payment} />
@@ -224,8 +226,8 @@ const EnhancedPaymentTabs = ({
             ) : (
               <div className="space-y-3">
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <h3 className="font-semibold text-blue-900 mb-1">Buyer Order Payments</h3>
-                  <p className="text-sm text-blue-700">Incoming payments from buyers for orders (before processing to farmers)</p>
+                  <h3 className="font-semibold text-blue-900 mb-1">Payments FROM Buyers</h3>
+                  <p className="text-sm text-blue-700">Order payments received from buyers for their purchases</p>
                 </div>
                 {buyerPayments.map((payment) => (
                   <PaymentCard key={payment.id} payment={payment} />

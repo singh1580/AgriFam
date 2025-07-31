@@ -34,18 +34,16 @@ const AdminFeedbackManagement = () => {
   const [responseText, setResponseText] = useState('');
   const [submittingResponse, setSubmittingResponse] = useState(false);
 
-  // Fetch all feedback from notifications
+  // Fetch all feedback from the feedback table
   const { data: feedbacks = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-feedback'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('notifications')
+        .from('feedback')
         .select(`
           *,
-          profiles!user_id(full_name, email, role)
+          user:profiles(full_name, email, role)
         `)
-        .eq('type', 'admin_message')
-        .or('title.ilike.%Feedback:%,title.ilike.%feedback%')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -53,49 +51,10 @@ const AdminFeedbackManagement = () => {
         throw error;
       }
       
-      // Parse feedback data from notifications
-      return (data || []).map(notification => {
-        try {
-          let feedbackData;
-          try {
-            feedbackData = JSON.parse(notification.message);
-          } catch {
-            feedbackData = { description: notification.message };
-          }
-          
-          return {
-            id: notification.id,
-            user_id: notification.user_id,
-            user: notification.profiles || { full_name: 'Unknown User', email: 'unknown@email.com' },
-            subject: feedbackData.subject || notification.title.replace(/^(Buyer|Farmer) Feedback: /, '') || 'Feedback',
-            category: feedbackData.category || 'general_feedback',
-            priority: feedbackData.priority || 'medium',
-            description: feedbackData.description || notification.message || 'No description provided',
-            rating: feedbackData.rating || 5,
-            status: notification.read ? 'resolved' : 'pending',
-            user_type: feedbackData.userType || (notification.title?.includes('Buyer') ? 'buyer' : 'farmer'),
-            created_at: notification.created_at,
-            admin_response: null
-          };
-        } catch (parseError) {
-          console.error('Error parsing feedback notification:', parseError);
-          // Return minimal fallback
-          return {
-            id: notification.id,
-            user_id: notification.user_id,
-            user: { full_name: 'Unknown User', email: 'unknown@email.com' },
-            subject: 'Feedback Submission',
-            category: 'general_feedback',
-            priority: 'medium',
-            description: notification.message || 'No description available',
-            rating: 5,
-            status: notification.read ? 'resolved' : 'pending',
-            user_type: 'buyer',
-            created_at: notification.created_at,
-            admin_response: null
-          };
-        }
-      });
+      return (data || []).map(feedback => ({
+        ...feedback,
+        user: feedback.user || { full_name: 'Unknown User', email: 'unknown@email.com', role: 'unknown' }
+      }));
     },
     refetchInterval: 30000,
   });
@@ -123,9 +82,10 @@ const AdminFeedbackManagement = () => {
   const updateFeedbackStatus = async (feedbackId: string, status: string) => {
     try {
       const { error } = await supabase
-        .from('notifications')
+        .from('feedback')
         .update({ 
-          read: status === 'resolved'
+          status: status,
+          updated_at: new Date().toISOString()
         })
         .eq('id', feedbackId);
 
@@ -159,11 +119,13 @@ const AdminFeedbackManagement = () => {
     try {
       const feedback = feedbacks.find(f => f.id === feedbackId);
       
-      // Mark feedback as resolved
+      // Update feedback with admin response and mark as resolved
       const { error: updateError } = await supabase
-        .from('notifications')
+        .from('feedback')
         .update({ 
-          read: true
+          status: 'resolved',
+          admin_response: responseText,
+          updated_at: new Date().toISOString()
         })
         .eq('id', feedbackId);
 

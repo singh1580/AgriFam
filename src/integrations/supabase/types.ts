@@ -131,6 +131,59 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          admin_response: string | null
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          priority: string
+          rating: number
+          status: string
+          subject: string
+          updated_at: string | null
+          user_id: string
+          user_type: string
+        }
+        Insert: {
+          admin_response?: string | null
+          category: string
+          created_at?: string | null
+          description: string
+          id?: string
+          priority?: string
+          rating?: number
+          status?: string
+          subject: string
+          updated_at?: string | null
+          user_id: string
+          user_type: string
+        }
+        Update: {
+          admin_response?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          priority?: string
+          rating?: number
+          status?: string
+          subject?: string
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string | null
@@ -264,7 +317,9 @@ export type Database = {
           farmer_id: string
           id: string
           order_id: string | null
+          payment_direction: string | null
           payment_method: string | null
+          payment_type: string | null
           platform_fee: number | null
           processed_at: string | null
           status: Database["public"]["Enums"]["payment_status"] | null
@@ -278,7 +333,9 @@ export type Database = {
           farmer_id: string
           id?: string
           order_id?: string | null
+          payment_direction?: string | null
           payment_method?: string | null
+          payment_type?: string | null
           platform_fee?: number | null
           processed_at?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null
@@ -292,7 +349,9 @@ export type Database = {
           farmer_id?: string
           id?: string
           order_id?: string | null
+          payment_direction?: string | null
           payment_method?: string | null
+          payment_type?: string | null
           platform_fee?: number | null
           processed_at?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null

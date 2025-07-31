@@ -12,8 +12,10 @@ import { StatsSkeleton } from '@/components/ui/dashboard-skeleton';
 import { useFarmerDashboard } from '@/hooks/useFarmerDashboard';
 import { useFarmerNotifications } from '@/hooks/useFarmerNotifications';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceOptimization';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-const FeedbackSection = React.lazy(() => import('@/components/feedback/FeedbackSection'));
+// Convert dynamic import to regular import to fix loading issue
+import FeedbackSection from '@/components/feedback/FeedbackSection';
 
 const FarmerDashboard = () => {
   usePerformanceMonitor('FarmerDashboard');
@@ -64,9 +66,7 @@ const FarmerDashboard = () => {
       case 'feedback':
         return (
           <div className="animate-fade-in">
-            <Suspense fallback={<StatsSkeleton />}>
-              <FeedbackSection userType="farmer" />
-            </Suspense>
+            <FeedbackSection userType="farmer" />
           </div>
         );
       default:
@@ -84,28 +84,32 @@ const FarmerDashboard = () => {
   ]);
 
   return (
-    <AnimatedBackground variant="gradient" className="min-h-screen bg-background">
-      <div className="flex">
-        <FarmerDashboardSidebar
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          setSidebarOpen={setSidebarOpen}
-          unreadNotifications={unreadCount}
-          sidebarOpen={sidebarOpen}
-        />
-
-        <div className="flex-1 min-w-0">
-          <FarmerDashboardHeader
-            setSidebarOpen={setSidebarOpen}
+    <ErrorBoundary>
+      <AnimatedBackground variant="gradient" className="min-h-screen bg-background">
+        <div className="flex">
+          <FarmerDashboardSidebar
             activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            setSidebarOpen={setSidebarOpen}
+            unreadNotifications={unreadCount}
+            sidebarOpen={sidebarOpen}
           />
 
-          <main className="p-4 lg:p-8">
-            {renderContent()}
-          </main>
+          <div className="flex-1 min-w-0">
+            <FarmerDashboardHeader
+              setSidebarOpen={setSidebarOpen}
+              activeSection={activeSection}
+            />
+
+            <main className="p-4 lg:p-8">
+              <ErrorBoundary>
+                {renderContent()}
+              </ErrorBoundary>
+            </main>
+          </div>
         </div>
-      </div>
-    </AnimatedBackground>
+      </AnimatedBackground>
+    </ErrorBoundary>
   );
 };
 

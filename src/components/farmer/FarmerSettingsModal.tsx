@@ -24,6 +24,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FarmerSettingsModalProps {
   isOpen: boolean;
@@ -33,6 +35,8 @@ interface FarmerSettingsModalProps {
 const FarmerSettingsModal = ({ isOpen, onClose }: FarmerSettingsModalProps) => {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
     // Profile Settings
@@ -71,9 +75,7 @@ const FarmerSettingsModal = ({ isOpen, onClose }: FarmerSettingsModalProps) => {
     profileVisibility: 'public',
     contactVisibility: 'buyers_only',
     
-    // Appearance
-    theme: 'system' as 'light' | 'dark' | 'system',
-    language: 'english'
+    // Appearance - removed from state as they're handled by providers
   });
 
   useEffect(() => {
@@ -155,8 +157,7 @@ const FarmerSettingsModal = ({ isOpen, onClose }: FarmerSettingsModalProps) => {
               contactVisibility: settings.contactVisibility
             },
             appearance: {
-              theme: settings.theme,
-              language: settings.language
+              // Theme and language handled by providers
             }
           }
         });
@@ -286,41 +287,41 @@ const FarmerSettingsModal = ({ isOpen, onClose }: FarmerSettingsModalProps) => {
                 </h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Theme Preference</Label>
+                    <Label>{t('settings.theme')}</Label>
                     <div className="flex gap-2 mt-2">
                       <Button
-                        variant={settings.theme === 'light' ? 'default' : 'outline'}
+                        variant={theme === 'light' ? 'default' : 'outline'}
                         size="sm"
-                        onClick={() => handleSettingChange('theme', 'light')}
+                        onClick={() => setTheme('light')}
                         className="flex items-center gap-2"
                       >
                         <Sun className="h-3 w-3" />
-                        Light
+                        {t('theme.light')}
                       </Button>
                       <Button
-                        variant={settings.theme === 'dark' ? 'default' : 'outline'}
+                        variant={theme === 'dark' ? 'default' : 'outline'}
                         size="sm"
-                        onClick={() => handleSettingChange('theme', 'dark')}
+                        onClick={() => setTheme('dark')}
                         className="flex items-center gap-2"
                       >
                         <Moon className="h-3 w-3" />
-                        Dark
+                        {t('theme.dark')}
                       </Button>
                       <Button
-                        variant={settings.theme === 'system' ? 'default' : 'outline'}
+                        variant={theme === 'system' ? 'default' : 'outline'}
                         size="sm"
-                        onClick={() => handleSettingChange('theme', 'system')}
+                        onClick={() => setTheme('system')}
                         className="flex items-center gap-2"
                       >
                         <Monitor className="h-3 w-3" />
-                        System
+                        {t('theme.system')}
                       </Button>
                     </div>
                   </div>
                   
                   <div>
-                    <Label htmlFor="language">Language</Label>
-                    <Select value={settings.language} onValueChange={(value) => handleSettingChange('language', value)}>
+                    <Label htmlFor="language">{t('settings.language')}</Label>
+                    <Select value={language} onValueChange={(value) => setLanguage(value as any)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -330,7 +331,7 @@ const FarmerSettingsModal = ({ isOpen, onClose }: FarmerSettingsModalProps) => {
                         <SelectItem value="bengali">বাংলা</SelectItem>
                         <SelectItem value="tamil">தமிழ்</SelectItem>
                         <SelectItem value="telugu">తెలుగు</SelectItem>
-                        <SelectItem value="marathi">मराठी</SelectItem>
+                        <SelectItem value="marathi">मराठী</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

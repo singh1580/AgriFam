@@ -2,8 +2,21 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { ThemeProvider } from './contexts/ThemeProvider'
+import { LanguageProvider } from './contexts/LanguageContext'
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider
+    attribute="class"
+    defaultTheme="system"
+    enableSystem
+    disableTransitionOnChange
+  >
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  </ThemeProvider>
+);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

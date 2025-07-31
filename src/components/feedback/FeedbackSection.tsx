@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { MessageSquare, Send, Star } from 'lucide-react';
 import FeedbackSubmissionModal from './FeedbackSubmissionModal';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FeedbackSectionProps {
   userType: 'buyer' | 'farmer';
@@ -10,11 +11,12 @@ interface FeedbackSectionProps {
 
 const FeedbackSection = ({ userType }: FeedbackSectionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Feedback & Support</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2">{t('feedback.title')}</h2>
         <p className="text-muted-foreground">
           Help us improve your experience by sharing your feedback
         </p>
@@ -25,7 +27,7 @@ const FeedbackSection = ({ userType }: FeedbackSectionProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5 text-primary" />
-              Submit Feedback
+              {t('feedback.submit')}
             </CardTitle>
             <CardDescription>
               Share your thoughts and suggestions to help us improve our platform
@@ -34,7 +36,7 @@ const FeedbackSection = ({ userType }: FeedbackSectionProps) => {
           <CardContent>
             <Button className="w-full">
               <Send className="h-4 w-4 mr-2" />
-              Give Feedback
+              {t('feedback.submit')}
             </Button>
           </CardContent>
         </Card>
@@ -43,7 +45,7 @@ const FeedbackSection = ({ userType }: FeedbackSectionProps) => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Star className="h-5 w-5 text-yellow-500" />
-              Rate Your Experience
+              {t('feedback.rate')}
             </CardTitle>
             <CardDescription>
               Your ratings help other users and improve our services
@@ -52,7 +54,7 @@ const FeedbackSection = ({ userType }: FeedbackSectionProps) => {
           <CardContent>
             <Button variant="outline" className="w-full" onClick={() => setIsModalOpen(true)}>
               <Star className="h-4 w-4 mr-2" />
-              Leave a Rating
+              {t('feedback.rate')}
             </Button>
           </CardContent>
         </Card>

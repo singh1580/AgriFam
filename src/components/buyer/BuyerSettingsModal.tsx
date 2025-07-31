@@ -11,6 +11,8 @@ import { Settings, Bell, Eye, Moon, Sun, Monitor, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BuyerSettingsModalProps {
   isOpen: boolean;
@@ -20,6 +22,8 @@ interface BuyerSettingsModalProps {
 const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
     // Profile Settings
@@ -35,9 +39,7 @@ const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
     deliveryUpdates: true,
     paymentAlerts: true,
     
-    // Appearance
-    theme: 'system' as 'light' | 'dark' | 'system',
-    language: 'english',
+    // Appearance - removed from state as they're handled by providers
     currency: 'INR',
     
     // Privacy & Security
@@ -90,11 +92,9 @@ const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
               deliveryUpdates: settings.deliveryUpdates,
               paymentAlerts: settings.paymentAlerts
             },
-            appearance: {
-              theme: settings.theme,
-              language: settings.language,
-              currency: settings.currency
-            },
+                appearance: {
+                  currency: settings.currency
+                },
             privacy: {
               profileVisibility: settings.profileVisibility,
               dataSharing: settings.dataSharing,
@@ -266,42 +266,42 @@ const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
               
               <div className="space-y-4">
                 <div>
-                  <Label>Theme Preference</Label>
+                  <Label>{t('settings.theme')}</Label>
                   <div className="flex gap-2 mt-2">
                     <Button
-                      variant={settings.theme === 'light' ? 'default' : 'outline'}
+                      variant={theme === 'light' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'light')}
+                      onClick={() => setTheme('light')}
                       className="flex items-center gap-2"
                     >
                       <Sun className="h-3 w-3" />
-                      Light
+                      {t('theme.light')}
                     </Button>
                     <Button
-                      variant={settings.theme === 'dark' ? 'default' : 'outline'}
+                      variant={theme === 'dark' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'dark')}
+                      onClick={() => setTheme('dark')}
                       className="flex items-center gap-2"
                     >
                       <Moon className="h-3 w-3" />
-                      Dark
+                      {t('theme.dark')}
                     </Button>
                     <Button
-                      variant={settings.theme === 'system' ? 'default' : 'outline'}
+                      variant={theme === 'system' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'system')}
+                      onClick={() => setTheme('system')}
                       className="flex items-center gap-2"
                     >
                       <Monitor className="h-3 w-3" />
-                      System
+                      {t('theme.system')}
                     </Button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="language">Language</Label>
-                    <Select value={settings.language} onValueChange={(value) => handleSettingChange('language', value)}>
+                    <Label htmlFor="language">{t('settings.language')}</Label>
+                    <Select value={language} onValueChange={(value) => setLanguage(value as any)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -310,6 +310,8 @@ const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
                         <SelectItem value="hindi">हिंदी</SelectItem>
                         <SelectItem value="bengali">বাংলা</SelectItem>
                         <SelectItem value="tamil">தமிழ்</SelectItem>
+                        <SelectItem value="telugu">తెలుగు</SelectItem>
+                        <SelectItem value="marathi">मराठी</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -335,10 +337,10 @@ const BuyerSettingsModal = ({ isOpen, onClose }: BuyerSettingsModalProps) => {
 
         <div className="flex gap-3 pt-6">
           <Button variant="outline" onClick={onClose} className="flex-1">
-            Cancel
+            {t('settings.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={loading} className="flex-1">
-            {loading ? 'Saving...' : 'Save Settings'}
+            {loading ? 'Saving...' : t('settings.save')}
           </Button>
         </div>
       </DialogContent>

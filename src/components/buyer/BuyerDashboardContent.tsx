@@ -9,7 +9,8 @@ const AggregatedProductGrid = React.lazy(() => import('./AggregatedProductGrid')
 const OrderTrackingSection = React.lazy(() => import('./OrderTrackingSection'));
 const OrderHistorySection = React.lazy(() => import('./OrderHistorySection'));
 const NotificationCenter = React.lazy(() => import('./NotificationCenter'));
-const FeedbackSection = React.lazy(() => import('@/components/feedback/FeedbackSection'));
+// Convert dynamic import to regular import to fix loading issue
+import FeedbackSection from '@/components/feedback/FeedbackSection';
 
 type DashboardSection = 'browse' | 'orders' | 'history' | 'notifications' | 'feedback';
 
@@ -168,9 +169,7 @@ const BuyerDashboardContent = React.memo(({
       case 'feedback':
         return (
           <div className="animate-fade-in">
-            <Suspense fallback={<StatsSkeleton />}>
-              <FeedbackSection userType="buyer" />
-            </Suspense>
+            <FeedbackSection userType="buyer" />
           </div>
         );
       default:

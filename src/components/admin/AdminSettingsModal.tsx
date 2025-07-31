@@ -20,6 +20,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
 
 interface AdminSettingsModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ interface AdminSettingsModalProps {
 const AdminSettingsModal = ({ isOpen, onClose }: AdminSettingsModalProps) => {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState({
     // Profile Settings
@@ -48,8 +50,7 @@ const AdminSettingsModal = ({ isOpen, onClose }: AdminSettingsModalProps) => {
     loginAlerts: true,
     sessionTimeout: '30',
     
-    // Appearance
-    theme: 'system' as 'light' | 'dark' | 'system',
+    // Appearance - removed from state as handled by provider
     
     // System Settings
     autoBackup: true,
@@ -172,27 +173,27 @@ const AdminSettingsModal = ({ isOpen, onClose }: AdminSettingsModalProps) => {
                   <Label>Theme Preference</Label>
                   <div className="flex gap-2 mt-2">
                     <Button
-                      variant={settings.theme === 'light' ? 'default' : 'outline'}
+                      variant={theme === 'light' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'light')}
+                      onClick={() => setTheme('light')}
                       className="flex items-center gap-2"
                     >
                       <Sun className="h-3 w-3" />
                       Light
                     </Button>
                     <Button
-                      variant={settings.theme === 'dark' ? 'default' : 'outline'}
+                      variant={theme === 'dark' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'dark')}
+                      onClick={() => setTheme('dark')}
                       className="flex items-center gap-2"
                     >
                       <Moon className="h-3 w-3" />
                       Dark
                     </Button>
                     <Button
-                      variant={settings.theme === 'system' ? 'default' : 'outline'}
+                      variant={theme === 'system' ? 'default' : 'outline'}
                       size="sm"
-                      onClick={() => handleSettingChange('theme', 'system')}
+                      onClick={() => setTheme('system')}
                       className="flex items-center gap-2"
                     >
                       <Monitor className="h-3 w-3" />

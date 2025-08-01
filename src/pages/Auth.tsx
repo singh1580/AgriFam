@@ -35,7 +35,7 @@ const Auth = () => {
     password: '',
     confirmPassword: '',
     fullName: '',
-    role: 'farmer' as 'farmer' | 'buyer' | 'admin'
+    role: 'farmer' as 'farmer' | 'buyer'
   });
 
   const validateSignUpData = () => {
@@ -129,8 +129,7 @@ const Auth = () => {
 
   const roleOptions = [
     { value: 'farmer', label: 'Farmer', icon: Sprout, description: 'Sell your produce directly' },
-    { value: 'buyer', label: 'Buyer', icon: ShoppingCart, description: 'Source quality produce' },
-    { value: 'admin', label: 'Admin', icon: Shield, description: 'Manage platform operations' }
+    { value: 'buyer', label: 'Buyer', icon: ShoppingCart, description: 'Source quality produce' }
   ];
 
   if (loading) {
@@ -243,7 +242,7 @@ const Auth = () => {
                     <Label htmlFor="role">Role</Label>
                     <Select 
                       value={signUpData.role} 
-                      onValueChange={(value: 'farmer' | 'buyer' | 'admin') => 
+                      onValueChange={(value: 'farmer' | 'buyer') => 
                         setSignUpData({ ...signUpData, role: value })
                       }
                       disabled={isLoading}

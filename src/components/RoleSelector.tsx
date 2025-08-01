@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sprout, ShoppingCart, Shield } from 'lucide-react';
 
 interface RoleSelectorProps {
-  onRoleSelect: (role: 'farmer' | 'buyer' | 'admin') => void;
+  onRoleSelect: (role: 'farmer' | 'buyer') => void;
 }
 
 const RoleSelector = ({ onRoleSelect }: RoleSelectorProps) => {
@@ -25,14 +25,6 @@ const RoleSelector = ({ onRoleSelect }: RoleSelectorProps) => {
       icon: ShoppingCart,
       color: 'from-blue-500 to-blue-600',
       features: ['Browse Products', 'Bulk Orders', 'Filter & Search', 'Order Tracking']
-    },
-    {
-      id: 'admin' as const,
-      title: 'Admin',
-      description: 'Manage platform operations and transactions',
-      icon: Shield,
-      color: 'from-purple-500 to-purple-600',
-      features: ['Product Verification', 'Payment Management', 'Analytics', 'User Management']
     }
   ];
 
@@ -48,7 +40,7 @@ const RoleSelector = ({ onRoleSelect }: RoleSelectorProps) => {
           <p className="text-gray-500">Eliminating middlemen, maximizing profits</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {roles.map((role) => {
             const Icon = role.icon;
             

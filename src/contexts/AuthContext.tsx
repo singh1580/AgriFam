@@ -37,13 +37,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Wait longer for new signups to allow the trigger to create the profile
-          const delay = event === 'SIGNED_IN' ? 2000 : 1000;
-          setTimeout(() => {
-            if (mounted) {
-              fetchProfile(session.user.id);
-            }
-          }, delay);
+          // Fetch profile immediately for better UX
+          fetchProfile(session.user.id);
         } else {
           clearProfile();
         }

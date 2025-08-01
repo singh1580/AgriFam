@@ -58,41 +58,41 @@
   }
 
   .dark {
-    --background: 16 25% 28%;      /* Dark earth brown */
-    --foreground: 44 20% 97%;
+    --background: 0 0% 9%;         /* Deep dark background #171717 */
+    --foreground: 0 0% 98%;        /* Almost white text */
 
-    --card: 16 25% 28%;
-    --card-foreground: 44 20% 97%;
+    --card: 0 0% 13%;              /* Dark card background #212121 */
+    --card-foreground: 0 0% 98%;   /* White card text */
 
-    --popover: 16 25% 28%;
-    --popover-foreground: 44 20% 97%;
+    --popover: 0 0% 13%;           /* Dark popover */
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 122 39% 55%;        /* Lighter green for dark mode */
-    --primary-foreground: 0 0% 13%;
+    --primary: 122 39% 55%;        /* Green primary */
+    --primary-foreground: 0 0% 98%; /* White text on primary */
 
-    --secondary: 16 25% 45%;       /* Lighter brown for dark mode */
-    --secondary-foreground: 44 20% 97%;
+    --secondary: 0 0% 18%;         /* Dark secondary #2D2D2D */
+    --secondary-foreground: 0 0% 98%; /* White text on secondary */
 
-    --muted: 16 25% 35%;
-    --muted-foreground: 44 20% 70%;
+    --muted: 0 0% 18%;             /* Muted dark background */
+    --muted-foreground: 0 0% 65%;   /* Light gray muted text */
 
-    --accent: 51 100% 60%;         /* Brighter yellow for dark mode */
-    --accent-foreground: 0 0% 13%;
+    --accent: 51 100% 55%;         /* Bright yellow accent */
+    --accent-foreground: 0 0% 9%;   /* Dark text on accent */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 44 20% 97%;
+    --destructive: 0 84% 60%;      /* Red destructive */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 16 25% 40%;
-    --input: 16 25% 40%;
-    --ring: 122 39% 55%;
+    --border: 0 0% 25%;            /* Dark border #404040 */
+    --input: 0 0% 25%;             /* Dark input border */
+    --ring: 122 39% 55%;           /* Green focus ring */
 
-    --sidebar-background: 16 25% 25%;
-    --sidebar-foreground: 44 20% 95%;
+    --sidebar-background: 0 0% 11%; /* Slightly lighter sidebar #1C1C1C */
+    --sidebar-foreground: 0 0% 95%; /* Light sidebar text */
     --sidebar-primary: 122 39% 55%;
-    --sidebar-primary-foreground: 0 0% 13%;
-    --sidebar-accent: 16 25% 35%;
-    --sidebar-accent-foreground: 44 20% 95%;
-    --sidebar-border: 16 25% 40%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 25%;
     --sidebar-ring: 122 39% 55%;
   }
 }

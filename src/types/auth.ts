@@ -16,7 +16,7 @@ export interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
-  signUp: (email: string, password: string, userData: { full_name: string; role: 'farmer' | 'buyer' | 'admin' }) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, userData: { full_name: string; role: 'farmer' | 'buyer' }) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
@@ -24,5 +24,5 @@ export interface AuthContextType {
 
 export interface SignUpData {
   full_name: string;
-  role: 'farmer' | 'buyer' | 'admin';
+  role: 'farmer' | 'buyer';
 }

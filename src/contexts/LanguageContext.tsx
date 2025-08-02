@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 type Language = 'english' | 'hindi' | 'bengali' | 'tamil' | 'telugu' | 'marathi';
 
@@ -6,6 +9,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  isLoading: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -83,10 +87,20 @@ const translations = {
     'farmer.earnings': 'Earnings',
     'farmer.collections': 'Collections',
     'farmer.stats': 'Statistics',
+    'farmer.submit_product': 'Submit Product',
+    'farmer.manage_products': 'Manage Products',
+    'farmer.view_earnings': 'View Earnings',
+    'farmer.collection_schedule': 'Collection Schedule',
+    'farmer.product_status': 'Product Status',
+    'farmer.payment_history': 'Payment History',
     'buyer.marketplace': 'Marketplace',
     'buyer.my_orders': 'My Orders',
     'buyer.order_history': 'Order History',
     'buyer.browse_products': 'Browse Products',
+    'buyer.product_catalog': 'Product Catalog',
+    'buyer.order_tracking': 'Order Tracking',
+    'buyer.payment_methods': 'Payment Methods',
+    'buyer.delivery_address': 'Delivery Address',
     'admin.user_management': 'User Management',
     'admin.payment_management': 'Payment Management',
     'admin.product_approvals': 'Product Approvals',
@@ -111,6 +125,30 @@ const translations = {
     'placeholders.enter_email': 'Enter your email',
     'placeholders.enter_password': 'Enter your password',
     'placeholders.enter_name': 'Enter your name',
+    'buttons.sign_in': 'Sign In',
+    'buttons.sign_up': 'Sign Up',
+    'buttons.sign_out': 'Sign Out',
+    'buttons.get_started': 'Get Started',
+    'buttons.learn_more': 'Learn More',
+    'buttons.contact_us': 'Contact Us',
+    'forms.product_name': 'Product Name',
+    'forms.category': 'Category',
+    'forms.quantity': 'Quantity',
+    'forms.price_per_unit': 'Price per Unit',
+    'forms.harvest_date': 'Harvest Date',
+    'forms.location': 'Location',
+    'forms.description': 'Description',
+    'forms.upload_images': 'Upload Images',
+    'status.pending_review': 'Pending Review',
+    'status.approved': 'Approved',
+    'status.rejected': 'Rejected',
+    'status.scheduled_collection': 'Scheduled for Collection',
+    'status.collected': 'Collected',
+    'order_status.pending': 'Pending',
+    'order_status.confirmed': 'Confirmed',
+    'order_status.in_transit': 'In Transit',
+    'order_status.delivered': 'Delivered',
+    'order_status.cancelled': 'Cancelled',
   },
   hindi: {
     'welcome': 'स्वागत है',
@@ -184,10 +222,20 @@ const translations = {
     'farmer.earnings': 'कमाई',
     'farmer.collections': 'संग्रह',
     'farmer.stats': 'आंकड़े',
+    'farmer.submit_product': 'उत्पाद जमा करें',
+    'farmer.manage_products': 'उत्पाद प्रबंधन',
+    'farmer.view_earnings': 'कमाई देखें',
+    'farmer.collection_schedule': 'संग्रह अनुसूची',
+    'farmer.product_status': 'उत्पाद स्थिति',
+    'farmer.payment_history': 'भुगतान इतिहास',
     'buyer.marketplace': 'बाज़ार',
     'buyer.my_orders': 'मेरे ऑर्डर',
     'buyer.order_history': 'ऑर्डर इतिहास',
     'buyer.browse_products': 'उत्पाद ब्राउज़ करें',
+    'buyer.product_catalog': 'उत्पाद सूची',
+    'buyer.order_tracking': 'ऑर्डर ट्रैकिंग',
+    'buyer.payment_methods': 'भुगतान विधियां',
+    'buyer.delivery_address': 'डिलीवरी पता',
     'admin.user_management': 'उपयोगकर्ता प्रबंधन',
     'admin.payment_management': 'भुगतान प्रबंधन',
     'admin.product_approvals': 'उत्पाद अनुमोदन',
@@ -212,6 +260,30 @@ const translations = {
     'placeholders.enter_email': 'अपना ईमेल दर्ज करें',
     'placeholders.enter_password': 'अपना पासवर्ड दर्ज करें',
     'placeholders.enter_name': 'अपना नाम दर्ज करें',
+    'buttons.sign_in': 'साइन इन',
+    'buttons.sign_up': 'साइन अप',
+    'buttons.sign_out': 'साइन आउट',
+    'buttons.get_started': 'शुरू करें',
+    'buttons.learn_more': 'और जानें',
+    'buttons.contact_us': 'संपर्क करें',
+    'forms.product_name': 'उत्पाद का नाम',
+    'forms.category': 'श्रेणी',
+    'forms.quantity': 'मात्रा',
+    'forms.price_per_unit': 'प्रति यूनिट मूल्य',
+    'forms.harvest_date': 'फसल की तारीख',
+    'forms.location': 'स्थान',
+    'forms.description': 'विवरण',
+    'forms.upload_images': 'चित्र अपलोड करें',
+    'status.pending_review': 'समीक्षा के लिए लंबित',
+    'status.approved': 'अनुमोदित',
+    'status.rejected': 'अस्वीकृत',
+    'status.scheduled_collection': 'संग्रह के लिए निर्धारित',
+    'status.collected': 'एकत्रित',
+    'order_status.pending': 'लंबित',
+    'order_status.confirmed': 'पुष्ट',
+    'order_status.in_transit': 'पारगमन में',
+    'order_status.delivered': 'वितरित',
+    'order_status.cancelled': 'रद्द',
   },
   bengali: {
     'welcome': 'স্বাগতম',
@@ -621,6 +693,7 @@ const translations = {
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('english');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') as Language;
@@ -639,7 +712,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isLoading }}>
       {children}
     </LanguageContext.Provider>
   );

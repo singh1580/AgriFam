@@ -1,8 +1,9 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import { StatsSkeleton, ProductGridSkeleton } from '@/components/ui/dashboard-skeleton';
 import { Order, Notification } from '@/types/order';
 import { Loader2 } from 'lucide-react';
+import { usePerformanceMonitor } from '@/hooks/usePerformanceOptimization';
 
 const ProductFilters = React.lazy(() => import('./ProductFilters'));
 const AggregatedProductGrid = React.lazy(() => import('./AggregatedProductGrid'));
@@ -84,6 +85,13 @@ const BuyerDashboardContent = React.memo(({
   notificationsLoading = false,
   isMarkingAllAsRead = false
 }: BuyerDashboardContentProps) => {
+  usePerformanceMonitor('BuyerDashboardContent', 100);
+
+  // Memoize expensive data operations
+  const memoizedProducts = useMemo(() => filteredProducts, [filteredProducts]);
+  const memoizedActiveOrders = useMemo(() => activeOrders, [activeOrders]);
+  const memoizedOrderHistory = useMemo(() => orderHistory, [orderHistory]);
+  const memoizedNotifications = useMemo(() => notifications, [notifications]);
   const renderSection = () => {
     switch (activeSection) {
       case 'browse':
@@ -109,7 +117,7 @@ const BuyerDashboardContent = React.memo(({
                 </div>
               ) : (
                 <AggregatedProductGrid
-                  products={filteredProducts}
+                  products={memoizedProducts}
                   onOrderProduct={handleOrderProduct}
                 />
               )}
@@ -126,7 +134,7 @@ const BuyerDashboardContent = React.memo(({
                 </div>
               ) : (
                 <OrderTrackingSection
-                  activeOrders={activeOrders}
+                  activeOrders={memoizedActiveOrders}
                   onViewOrderDetails={handleViewOrderDetails}
                 />
               )}
@@ -143,7 +151,7 @@ const BuyerDashboardContent = React.memo(({
                 </div>
               ) : (
                 <OrderHistorySection
-                  orderHistory={orderHistory}
+                  orderHistory={memoizedOrderHistory}
                   onViewOrderDetails={handleViewOrderDetails}
                   onReorder={handleReorder}
                 />
@@ -156,7 +164,7 @@ const BuyerDashboardContent = React.memo(({
           <div className="animate-fade-in">
             <Suspense fallback={<StatsSkeleton />}>
               <NotificationCenter
-                notifications={notifications}
+                notifications={memoizedNotifications}
                 onMarkAsRead={handleMarkAsRead}
                 onMarkAllAsRead={handleMarkAllAsRead}
                 onDeleteNotification={handleDeleteNotification}

@@ -1,5 +1,5 @@
 
-import React, { memo, useCallback, Suspense } from 'react';
+import React, { memo, useCallback, Suspense, useMemo } from 'react';
 import { Package, DollarSign, Clock, CheckCircle } from 'lucide-react';
 import AnimatedBackground from '@/components/ui/animated-background';
 import FarmerStats from './FarmerStats';
@@ -18,7 +18,7 @@ import { ErrorBoundary } from '@/components/ui/error-boundary';
 import FeedbackSection from '@/components/feedback/FeedbackSection';
 
 const FarmerDashboard = () => {
-  usePerformanceMonitor('FarmerDashboard');
+  usePerformanceMonitor('FarmerDashboard', 100); // Increased threshold for complex dashboard
   
   const {
     activeSection,
@@ -39,6 +39,10 @@ const FarmerDashboard = () => {
     error: notificationsError
   } = useFarmerNotifications();
 
+  // Memoize expensive operations
+  const memoizedProducts = useMemo(() => products, [products]);
+  const memoizedNotifications = useMemo(() => notifications, [notifications]);
+
   const renderContent = useCallback(() => {
     switch (activeSection) {
       case 'dashboard':
@@ -51,11 +55,11 @@ const FarmerDashboard = () => {
           </div>
         );
       case 'products':
-        return <ProductStatusList products={products} />;
+        return <ProductStatusList products={memoizedProducts} />;
       case 'notifications':
         return (
           <FarmerNotificationCenter
-            notifications={notifications}
+            notifications={memoizedNotifications}
             onMarkAsRead={handleMarkAsRead}
             onMarkAllAsRead={handleMarkAllAsRead}
             onDeleteNotification={handleDeleteNotification}
@@ -74,8 +78,8 @@ const FarmerDashboard = () => {
     }
   }, [
     activeSection, 
-    products, 
-    notifications, 
+    memoizedProducts, 
+    memoizedNotifications, 
     handleMarkAsRead, 
     handleMarkAllAsRead, 
     handleDeleteNotification,

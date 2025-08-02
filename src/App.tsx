@@ -25,19 +25,25 @@ import { AdminErrorBoundary } from "./components/admin/AdminErrorBoundary";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Performance optimized QueryClient
+// Enhanced React Query client configuration for maximum performance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60000, // 1 minute - faster refresh for better UX
-      gcTime: 300000, // 5 minutes - faster cleanup
-      retry: 2, // Allow retries for network issues
+      staleTime: 10 * 60 * 1000, // 10 minutes - longer cache for better performance
+      gcTime: 15 * 60 * 1000, // 15 minutes cache time
+      retry: (failureCount, error: any) => {
+        // Don't retry on authentication errors
+        if (error?.status === 401 || error?.status === 403) return false;
+        return failureCount < 2;
+      },
       refetchOnWindowFocus: false,
-      refetchOnReconnect: true, // Refetch on reconnect for fresh data
+      refetchOnMount: false, // Reduce unnecessary refetches
       refetchInterval: false,
+      refetchIntervalInBackground: false,
     },
     mutations: {
-      retry: 2, // Allow retries for mutations
+      retry: 1,
+      gcTime: 0,
     },
   },
 });

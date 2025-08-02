@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Home, Package, Bell, Shield, ExternalLink, LogOut, Sparkles, MessageSquare } from 'lucide-react';
 import { DashboardSection } from '@/hooks/useFarmerDashboard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NavigationItem {
   key: DashboardSection;
@@ -30,12 +31,13 @@ const FarmerDashboardSidebar = ({
   sidebarOpen
 }: FarmerDashboardSidebarProps) => {
   const { signOut } = useAuth();
+  const { t } = useLanguage();
 
   const navigationItems: NavigationItem[] = [
-    { key: 'dashboard', label: 'Dashboard', icon: Home },
-    { key: 'products', label: 'My Products', icon: Package },
-    { key: 'notifications', label: 'Notifications', icon: Bell, badge: unreadNotifications },
-    { key: 'feedback', label: 'Feedback', icon: MessageSquare }
+    { key: 'dashboard', label: t('dashboard'), icon: Home },
+    { key: 'products', label: t('products'), icon: Package },
+    { key: 'notifications', label: t('notifications'), icon: Bell, badge: unreadNotifications },
+    { key: 'feedback', label: t('feedback.title'), icon: MessageSquare }
   ];
 
   const handleSignOut = async () => {

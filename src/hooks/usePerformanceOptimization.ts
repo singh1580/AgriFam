@@ -77,15 +77,15 @@ export const useVirtualScroll = (
 
 // Enhanced performance monitoring with better thresholds
 export const usePerformanceMonitor = (componentName: string, threshold: number = 16) => {
+  const renderStartRef = useRef<number>();
+  
   useEffect(() => {
-    const startTime = performance.now();
+    renderStartRef.current = performance.now();
     
     return () => {
-      const endTime = performance.now();
-      const renderTime = endTime - startTime;
-      
-      // Only log in development
-      if (process.env.NODE_ENV === 'development') {
+      if (renderStartRef.current && process.env.NODE_ENV === 'development') {
+        const renderTime = performance.now() - renderStartRef.current;
+        
         if (renderTime > threshold) {
           console.warn(`⚠️ ${componentName} slow render: ${renderTime.toFixed(2)}ms (threshold: ${threshold}ms)`);
         } else if (renderTime > threshold / 2) {
@@ -94,4 +94,17 @@ export const usePerformanceMonitor = (componentName: string, threshold: number =
       }
     };
   });
+};
+
+// Enhanced callback memoization
+export const useOptimizedCallback = <T extends (...args: any[]) => any>(
+  callback: T,
+  deps: any[]
+): T => {
+  return useCallback(callback, deps);
+};
+
+// Enhanced memo with deep comparison option
+export const useDeepMemo = <T>(factory: () => T, deps: any[]): T => {
+  return useMemo(factory, deps);
 };

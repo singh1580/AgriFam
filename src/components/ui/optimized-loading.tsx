@@ -1,63 +1,59 @@
+import React, { memo } from 'react';
+import { cn } from '@/lib/utils';
 
-import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent } from '@/components/ui/card';
+interface OptimizedLoadingProps {
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'agricultural';
+  className?: string;
+  text?: string;
+}
 
-export const QuickLoadingSkeleton = () => (
-  <div className="space-y-4 animate-pulse">
-    <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[200px]" />
-        <Skeleton className="h-4 w-[150px]" />
+const OptimizedLoading = memo(({ 
+  size = 'md', 
+  variant = 'default',
+  className = '',
+  text
+}: OptimizedLoadingProps) => {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12'
+  };
+
+  const containerSizeClasses = {
+    sm: 'gap-2',
+    md: 'gap-3',
+    lg: 'gap-4'
+  };
+
+  if (variant === 'agricultural') {
+    return (
+      <div className={cn("flex flex-col items-center justify-center", containerSizeClasses[size], className)}>
+        <div className={cn("relative", sizeClasses[size])}>
+          <div className="absolute inset-0 border-2 border-primary/20 rounded-full"></div>
+          <div className="absolute inset-0 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute inset-2 border border-accent/50 rounded-full animate-pulse"></div>
+        </div>
+        {text && (
+          <span className="text-sm text-muted-foreground animate-pulse">{text}</span>
+        )}
       </div>
+    );
+  }
+
+  return (
+    <div className={cn("flex flex-col items-center justify-center", containerSizeClasses[size], className)}>
+      <div className={cn(
+        "border-2 border-muted border-t-primary rounded-full animate-spin",
+        sizeClasses[size]
+      )} />
+      {text && (
+        <span className="text-sm text-muted-foreground animate-pulse">{text}</span>
+      )}
     </div>
-  </div>
-);
+  );
+});
 
-export const OptimizedOrderSkeleton = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {[...Array(6)].map((_, i) => (
-      <Card key={i} className="overflow-hidden">
-        <CardContent className="p-4">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-3">
-              <Skeleton className="h-12 w-12 rounded-lg" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-3 w-16" />
-              </div>
-            </div>
-            <Skeleton className="h-4 w-full" />
-            <div className="flex justify-between items-center">
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-8 w-20" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
-);
+OptimizedLoading.displayName = 'OptimizedLoading';
 
-export const OptimizedNotificationSkeleton = () => (
-  <div className="space-y-3">
-    {[...Array(5)].map((_, i) => (
-      <Card key={i}>
-        <CardContent className="p-3">
-          <div className="flex items-start space-x-3">
-            <Skeleton className="h-5 w-5 rounded" />
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-4 w-12" />
-              </div>
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-3/4" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
-);
+export default OptimizedLoading;

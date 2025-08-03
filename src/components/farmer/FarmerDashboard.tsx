@@ -1,5 +1,5 @@
 
-import React, { memo, useCallback, Suspense, useMemo } from 'react';
+import React, { memo, useCallback, Suspense, useMemo, useEffect } from 'react';
 import { Package, DollarSign, Clock, CheckCircle } from 'lucide-react';
 import AnimatedBackground from '@/components/ui/animated-background';
 import FarmerStats from './FarmerStats';
@@ -42,6 +42,19 @@ const FarmerDashboard = () => {
   // Memoize expensive operations
   const memoizedProducts = useMemo(() => products, [products]);
   const memoizedNotifications = useMemo(() => notifications, [notifications]);
+
+  // Handle breadcrumb navigation
+  useEffect(() => {
+    const handleNavigateDashboard = (event: CustomEvent) => {
+      const { section } = event.detail;
+      setActiveSection(section);
+    };
+
+    window.addEventListener('navigate-dashboard' as any, handleNavigateDashboard);
+    return () => {
+      window.removeEventListener('navigate-dashboard' as any, handleNavigateDashboard);
+    };
+  }, [setActiveSection]);
 
   const renderContent = useCallback(() => {
     switch (activeSection) {

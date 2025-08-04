@@ -22,16 +22,16 @@ const LoadingSpinner = ({
   if (variant === 'agricultural') {
     return (
       <div className={cn("relative", sizeClasses[size], className)}>
-        <div className="absolute inset-0 border-2 border-primary/20 rounded-full"></div>
-        <div className="absolute inset-0 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <div className="absolute inset-2 border border-accent/50 rounded-full animate-pulse"></div>
+        <div className="absolute inset-0 border-2 border-crop-green/20 rounded-full"></div>
+        <div className="absolute inset-0 border-2 border-crop-green border-t-transparent rounded-full animate-spin"></div>
+        <div className="absolute inset-2 border border-harvest-yellow/50 rounded-full animate-pulse"></div>
       </div>
     );
   }
 
   return (
     <div className={cn(
-      "border-2 border-muted border-t-primary rounded-full animate-spin",
+      "border-2 border-muted border-t-crop-green rounded-full animate-spin",
       sizeClasses[size],
       className
     )} />

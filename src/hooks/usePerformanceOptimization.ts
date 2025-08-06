@@ -76,21 +76,20 @@ export const useVirtualScroll = (
 };
 
 // Enhanced performance monitoring with better thresholds
-export const usePerformanceMonitor = (componentName: string, threshold: number = 16) => {
+export const usePerformanceMonitor = (componentName: string, threshold: number = 50) => {
   useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    
     const startTime = performance.now();
     
     return () => {
       const endTime = performance.now();
       const renderTime = endTime - startTime;
       
-      // Only log in development
-      if (process.env.NODE_ENV === 'development') {
-        if (renderTime > threshold) {
-          console.warn(`⚠️ ${componentName} slow render: ${renderTime.toFixed(2)}ms (threshold: ${threshold}ms)`);
-        } else if (renderTime > threshold / 2) {
-          console.info(`ℹ️ ${componentName} render: ${renderTime.toFixed(2)}ms`);
-        }
+      if (renderTime > threshold) {
+        console.warn(`⚠️ ${componentName} slow render: ${renderTime.toFixed(2)}ms (threshold: ${threshold}ms)`);
+      } else if (renderTime > threshold / 2) {
+        console.info(`ℹ️ ${componentName} render: ${renderTime.toFixed(2)}ms`);
       }
     };
   });

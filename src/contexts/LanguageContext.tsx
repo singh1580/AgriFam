@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -195,95 +195,8 @@ const translations = {
     'time': 'समय',
     'created': 'बनाया गया',
     'updated': 'अपडेट किया गया',
-    'navigation.analytics': 'एनालिटिक्स',
-    'navigation.collections': 'संग्रह',
-    'navigation.communications': 'संचार',
-    'navigation.notifications': 'सूचनाएं',
-    'navigation.settings': 'सेटिंग्स',
-    'navigation.overview': 'अवलोकन',
-    'navigation.products': 'उत्पाद',
-    'navigation.orders': 'ऑर्डर',
-    'navigation.payments': 'भुगतान',
-    'navigation.users': 'उपयोगकर्ता',
-    'navigation.feedback': 'फीडबैक',
-    'navigation.history': 'इतिहास',
-    'settings.theme': 'थीम प्राधान्य',
-    'settings.language': 'भाषा',
-    'settings.save': 'सेटिंग्स सेव करें',
-    'settings.cancel': 'रद्द करें',
-    'theme.light': 'हल्का',
-    'theme.dark': 'गहरा',
-    'theme.system': 'सिस्टम',
-    'feedback.title': 'फीडबैक और सहायता',
-    'feedback.submit': 'फीडबैक भेजें',
-    'feedback.rate': 'अपना अनुभव रेट करें',
-    'farmer.quick_actions': 'त्वरित कार्य',
-    'farmer.recent_products': 'हालिया उत्पाद',
-    'farmer.earnings': 'कमाई',
-    'farmer.collections': 'संग्रह',
-    'farmer.stats': 'आंकड़े',
-    'farmer.submit_product': 'उत्पाद जमा करें',
-    'farmer.manage_products': 'उत्पाद प्रबंधन',
-    'farmer.view_earnings': 'कमाई देखें',
-    'farmer.collection_schedule': 'संग्रह अनुसूची',
-    'farmer.product_status': 'उत्पाद स्थिति',
-    'farmer.payment_history': 'भुगतान इतिहास',
-    'buyer.marketplace': 'बाज़ार',
-    'buyer.my_orders': 'मेरे ऑर्डर',
-    'buyer.order_history': 'ऑर्डर इतिहास',
-    'buyer.browse_products': 'उत्पाद ब्राउज़ करें',
-    'buyer.product_catalog': 'उत्पाद सूची',
-    'buyer.order_tracking': 'ऑर्डर ट्रैकिंग',
-    'buyer.payment_methods': 'भुगतान विधियां',
-    'buyer.delivery_address': 'डिलीवरी पता',
-    'admin.user_management': 'उपयोगकर्ता प्रबंधन',
-    'admin.payment_management': 'भुगतान प्रबंधन',
-    'admin.product_approvals': 'उत्पाद अनुमोदन',
-    'admin.system_health': 'सिस्टम स्वास्थ्य',
-    'common.sign_in': 'साइन इन',
-    'common.sign_up': 'साइन अप',
-    'common.sign_out': 'साइन आउट',
     'common.home': 'होम',
     'common.back': 'वापस',
-    'common.next': 'अगला',
-    'common.previous': 'पिछला',
-    'common.continue': 'जारी रखें',
-    'common.confirm': 'पुष्टि करें',
-    'common.close': 'बंद करें',
-    'common.open': 'खोलें',
-    'messages.welcome_back': 'वापस स्वागत है!',
-    'messages.goodbye': 'हमारे प्लेटफॉर्म का उपयोग करने के लिए धन्यवाद',
-    'messages.loading_data': 'आपका डेटा लोड हो रहा है...',
-    'messages.no_results': 'कोई परिणाम नहीं मिला',
-    'messages.try_again': 'कृपया पुनः प्रयास करें',
-    'placeholders.search_products': 'उत्पाद खोजें...',
-    'placeholders.enter_email': 'अपना ईमेल दर्ज करें',
-    'placeholders.enter_password': 'अपना पासवर्ड दर्ज करें',
-    'placeholders.enter_name': 'अपना नाम दर्ज करें',
-    'buttons.sign_in': 'साइन इन',
-    'buttons.sign_up': 'साइन अप',
-    'buttons.sign_out': 'साइन आउट',
-    'buttons.get_started': 'शुरू करें',
-    'buttons.learn_more': 'और जानें',
-    'buttons.contact_us': 'संपर्क करें',
-    'forms.product_name': 'उत्पाद का नाम',
-    'forms.category': 'श्रेणी',
-    'forms.quantity': 'मात्रा',
-    'forms.price_per_unit': 'प्रति यूनिट मूल्य',
-    'forms.harvest_date': 'फसल की तारीख',
-    'forms.location': 'स्थान',
-    'forms.description': 'विवरण',
-    'forms.upload_images': 'चित्र अपलोड करें',
-    'status.pending_review': 'समीक्षा के लिए लंबित',
-    'status.approved': 'अनुमोदित',
-    'status.rejected': 'अस्वीकृत',
-    'status.scheduled_collection': 'संग्रह के लिए निर्धारित',
-    'status.collected': 'एकत्रित',
-    'order_status.pending': 'लंबित',
-    'order_status.confirmed': 'पुष्ट',
-    'order_status.in_transit': 'पारगमन में',
-    'order_status.delivered': 'वितरित',
-    'order_status.cancelled': 'रद्द',
   },
   bengali: {
     'welcome': 'স্বাগতম',
@@ -330,61 +243,8 @@ const translations = {
     'time': 'সময়',
     'created': 'তৈরি',
     'updated': 'আপডেট',
-    'navigation.analytics': 'বিশ্লেষণ',
-    'navigation.collections': 'সংগ্রহ',
-    'navigation.communications': 'যোগাযোগ',
-    'navigation.notifications': 'বিজ্ঞপ্তি',
-    'navigation.settings': 'সেটিংস',
-    'navigation.overview': 'সারসংক্ষেপ',
-    'navigation.products': 'পণ্য',
-    'navigation.orders': 'অর্ডার',
-    'navigation.payments': 'পেমেন্ট',
-    'navigation.users': 'ব্যবহারকারী',
-    'navigation.feedback': 'মতামত',
-    'navigation.history': 'ইতিহাস',
-    'settings.theme': 'থিম পছন্দ',
-    'settings.language': 'ভাষা',
-    'settings.save': 'সেটিংস সংরক্ষণ',
-    'settings.cancel': 'বাতিল',
-    'theme.light': 'হালকা',
-    'theme.dark': 'গাঢ়',
-    'theme.system': 'সিস্টেম',
-    'feedback.title': 'মতামত ও সহায়তা',
-    'feedback.submit': 'মতামত জমা দিন',
-    'feedback.rate': 'আপনার অভিজ্ঞতা রেট করুন',
-    'farmer.quick_actions': 'দ্রুত কার্যক্রম',
-    'farmer.recent_products': 'সাম্প্রতিক পণ্য',
-    'farmer.earnings': 'আয়',
-    'farmer.collections': 'সংগ্রহ',
-    'farmer.stats': 'পরিসংখ্যান',
-    'buyer.marketplace': 'বাজার',
-    'buyer.my_orders': 'আমার অর্ডার',
-    'buyer.order_history': 'অর্ডার ইতিহাস',
-    'buyer.browse_products': 'পণ্য ব্রাউজ করুন',
-    'admin.user_management': 'ব্যবহারকারী ব্যবস্থাপনা',
-    'admin.payment_management': 'পেমেন্ট ব্যবস্থাপনা',
-    'admin.product_approvals': 'পণ্য অনুমোদন',
-    'admin.system_health': 'সিস্টেম স্বাস্থ্য',
-    'common.sign_in': 'সাইন ইন',
-    'common.sign_up': 'সাইন আপ',
-    'common.sign_out': 'সাইন আউট',
     'common.home': 'হোম',
     'common.back': 'পিছনে',
-    'common.next': 'পরবর্তী',
-    'common.previous': 'পূর্ববর্তী',
-    'common.continue': 'চালিয়ে যান',
-    'common.confirm': 'নিশ্চিত করুন',
-    'common.close': 'বন্ধ',
-    'common.open': 'খুলুন',
-    'messages.welcome_back': 'ফিরে আসার জন্য স্বাগতম!',
-    'messages.goodbye': 'আমাদের প্ল্যাটফর্ম ব্যবহার করার জন্য ধন্যবাদ',
-    'messages.loading_data': 'আপনার ডেটা লোড হচ্ছে...',
-    'messages.no_results': 'কোন ফলাফল পাওয়া যায়নি',
-    'messages.try_again': 'আবার চেষ্টা করুন',
-    'placeholders.search_products': 'পণ্য অনুসন্ধান...',
-    'placeholders.enter_email': 'আপনার ইমেইল লিখুন',
-    'placeholders.enter_password': 'আপনার পাসওয়ার্ড লিখুন',
-    'placeholders.enter_name': 'আপনার নাম লিখুন',
   },
   tamil: {
     'welcome': 'வரவேற்கின்றோம்',
@@ -431,61 +291,8 @@ const translations = {
     'time': 'நேரம்',
     'created': 'உருவாக்கப்பட்டது',
     'updated': 'புதுப்பிக்கப்பட்டது',
-    'navigation.analytics': 'பகுப்பாய்வுகள்',
-    'navigation.collections': 'சேகரிப்புகள்',
-    'navigation.communications': 'தகவல்தொடர்புகள்',
-    'navigation.notifications': 'அறிவிப்புகள்',
-    'navigation.settings': 'அமைப்புகள்',
-    'navigation.overview': 'கண்ணோட்டம்',
-    'navigation.products': 'தயாரிப்புகள்',
-    'navigation.orders': 'ஆர்டர்கள்',
-    'navigation.payments': 'பணம் செலுத்துதல்',
-    'navigation.users': 'பயனர்கள்',
-    'navigation.feedback': 'கருத்து',
-    'navigation.history': 'வரலாறு',
-    'settings.theme': 'தீம் விருப்பம்',
-    'settings.language': 'மொழி',
-    'settings.save': 'அமைப்புகளைச் சேமி',
-    'settings.cancel': 'ரத்து செய்',
-    'theme.light': 'வெளிச்சம்',
-    'theme.dark': 'இருட்டு',
-    'theme.system': 'கணினி',
-    'feedback.title': 'கருத்து மற்றும் ஆதரவு',
-    'feedback.submit': 'கருத்தைச் சமர்ப்பி',
-    'feedback.rate': 'உங்கள் அனுபவத்தை மதிப்பிடுங்கள்',
-    'farmer.quick_actions': 'விரைவு செயல்கள்',
-    'farmer.recent_products': 'சமீபத்திய தயாரிப்புகள்',
-    'farmer.earnings': 'வருமானம்',
-    'farmer.collections': 'சேகரிப்புகள்',
-    'farmer.stats': 'புள்ளிவிவரங்கள்',
-    'buyer.marketplace': 'சந்தை',
-    'buyer.my_orders': 'என் ஆர்டர்கள்',
-    'buyer.order_history': 'ஆர்டர் வரலாறு',
-    'buyer.browse_products': 'தயாரிப்புகளை உலாவு',
-    'admin.user_management': 'பயனர் நிர்வாகம்',
-    'admin.payment_management': 'பணம் செலுத்துதல் நிர்வாகம்',
-    'admin.product_approvals': 'தயாரிப்பு ஒப்புதல்கள்',
-    'admin.system_health': 'கணினி ஆரோக்கியம்',
-    'common.sign_in': 'உள்நுழை',
-    'common.sign_up': 'பதிவு செய்',
-    'common.sign_out': 'வெளியேறு',
     'common.home': 'முகப்பு',
     'common.back': 'பின்',
-    'common.next': 'அடுத்து',
-    'common.previous': 'முந்தைய',
-    'common.continue': 'தொடர்',
-    'common.confirm': 'உறுதிப்படுத்து',
-    'common.close': 'மூடு',
-    'common.open': 'திற',
-    'messages.welcome_back': 'திரும்பியதற்கு வரவேற்கிறோம்!',
-    'messages.goodbye': 'எங்கள் தளத்தைப் பயன்படுத்தியதற்கு நன்றி',
-    'messages.loading_data': 'உங்கள் தரவு ஏற்றப்படுகிறது...',
-    'messages.no_results': 'முடிவுகள் எதுவும் இல்லை',
-    'messages.try_again': 'மீண்டும் முயற்சிக்கவும்',
-    'placeholders.search_products': 'தயாரிப்புகளைத் தேடுங்கள்...',
-    'placeholders.enter_email': 'உங்கள் மின்னஞ்சலை உள்ளிடுங்கள்',
-    'placeholders.enter_password': 'உங்கள் கடவுச்சொல்லை உள்ளிடுங்கள்',
-    'placeholders.enter_name': 'உங்கள் பெயரை உள்ளிடுங்கள்',
   },
   telugu: {
     'welcome': 'స్వాగతం',
@@ -532,61 +339,8 @@ const translations = {
     'time': 'సమయం',
     'created': 'సృష్టించబడింది',
     'updated': 'అప్‌డేట్ చేయబడింది',
-    'navigation.analytics': 'విశ్లేషణలు',
-    'navigation.collections': 'సేకరణలు',
-    'navigation.communications': 'కమ్యూనికేషన్స్',
-    'navigation.notifications': 'నోటిఫికేషన్స్',
-    'navigation.settings': 'సెట్టింగ్స్',
-    'navigation.overview': 'అవలోకనం',
-    'navigation.products': 'ఉత్పత్తులు',
-    'navigation.orders': 'ఆర్డర్లు',
-    'navigation.payments': 'చెల్లింపులు',
-    'navigation.users': 'వినియోగదారులు',
-    'navigation.feedback': 'అభిప్రాయం',
-    'navigation.history': 'చరిత్ర',
-    'settings.theme': 'థీమ్ ప్రాధాన్యత',
-    'settings.language': 'భాష',
-    'settings.save': 'సెట్టింగ్స్ సేవ్ చేయండి',
-    'settings.cancel': 'రద్దు',
-    'theme.light': 'లైట్',
-    'theme.dark': 'డార్క్',
-    'theme.system': 'సిస్టమ్',
-    'feedback.title': 'అభిప్రాయం మరియు మద్దతు',
-    'feedback.submit': 'అభిప్రాయం సమర్పించండి',
-    'feedback.rate': 'మీ అనుభవాన్ని రేట్ చేయండి',
-    'farmer.quick_actions': 'త్వరిత చర్యలు',
-    'farmer.recent_products': 'ఇటీవలి ఉత్పత్తులు',
-    'farmer.earnings': 'ఆదాయం',
-    'farmer.collections': 'సేకరణలు',
-    'farmer.stats': 'గణాంకాలు',
-    'buyer.marketplace': 'మార్కెట్‌ప్లేస్',
-    'buyer.my_orders': 'నా ఆర్డర్లు',
-    'buyer.order_history': 'ఆర్డర్ చరిత్ర',
-    'buyer.browse_products': 'ఉత్పత్తులను బ్రౌజ్ చేయండి',
-    'admin.user_management': 'వినియోగదారు నిర్వహణ',
-    'admin.payment_management': 'చెల్లింపు నిర్వహణ',
-    'admin.product_approvals': 'ఉత్పత్తి ఆమోదాలు',
-    'admin.system_health': 'సిస్టమ్ ఆరోగ్యం',
-    'common.sign_in': 'సైన్ ఇన్',
-    'common.sign_up': 'సైన్ అప్',
-    'common.sign_out': 'సైన్ అవుట్',
     'common.home': 'హోమ్',
     'common.back': 'వెనుక',
-    'common.next': 'తరువాత',
-    'common.previous': 'మునుపటి',
-    'common.continue': 'కొనసాగండి',
-    'common.confirm': 'ధృవీకరించండి',
-    'common.close': 'మూసివేయండి',
-    'common.open': 'తెరవండి',
-    'messages.welcome_back': 'తిరిగి స్వాగతం!',
-    'messages.goodbye': 'మా ప్లాట్‌ఫారమ్‌ను ఉపయోగించినందుకు ధన్యవాదాలు',
-    'messages.loading_data': 'మీ డేటా లోడ్ అవుతోంది...',
-    'messages.no_results': 'ఫలితాలు కనుగొనబడలేదు',
-    'messages.try_again': 'దయచేసి మళ్లీ ప్రయత్నించండి',
-    'placeholders.search_products': 'ఉత్పత్తులను వెతకండి...',
-    'placeholders.enter_email': 'మీ ఇమెయిల్‌ను నమోదు చేయండి',
-    'placeholders.enter_password': 'మీ పాస్‌వర్డ్‌ను నమోదు చేయండి',
-    'placeholders.enter_name': 'మీ పేరును నమోదు చేయండి',
   },
   marathi: {
     'welcome': 'स्वागत आहे',
@@ -633,90 +387,79 @@ const translations = {
     'time': 'वेळ',
     'created': 'तयार केले',
     'updated': 'अपडेट केले',
-    'navigation.analytics': 'विश्लेषणे',
-    'navigation.collections': 'संकलने',
-    'navigation.communications': 'संप्रेषणे',
-    'navigation.notifications': 'सूचना',
-    'navigation.settings': 'सेटिंग्ज',
-    'navigation.overview': 'विहंगावलोकन',
-    'navigation.products': 'उत्पादने',
-    'navigation.orders': 'ऑर्डर',
-    'navigation.payments': 'पेमेंट',
-    'navigation.users': 'वापरकर्ते',
-    'navigation.feedback': 'अभिप्राय',
-    'navigation.history': 'इतिहास',
-    'settings.theme': 'थीम प्राधान्य',
-    'settings.language': 'भाषा',
-    'settings.save': 'सेटिंग्ज सेव्ह करा',
-    'settings.cancel': 'रद्द करा',
-    'theme.light': 'हलका',
-    'theme.dark': 'गडद',
-    'theme.system': 'सिस्टम',
-    'feedback.title': 'फीडबॅक आणि सहाय्य',
-    'feedback.submit': 'फीडबॅक पाठवा',
-    'feedback.rate': 'तुमचा अनुभव रेट करा',
-    'farmer.quick_actions': 'त्वरित क्रिया',
-    'farmer.recent_products': 'अलीकडील उत्पादने',
-    'farmer.earnings': 'कमाई',
-    'farmer.collections': 'संकलने',
-    'farmer.stats': 'आकडेवारी',
-    'buyer.marketplace': 'मार्केटप्लेस',
-    'buyer.my_orders': 'माझे ऑर्डर',
-    'buyer.order_history': 'ऑर्डर इतिहास',
-    'buyer.browse_products': 'उत्पादने ब्राउझ करा',
-    'admin.user_management': 'वापरकर्ता व्यवस्थापन',
-    'admin.payment_management': 'पेमेंट व्यवस्थापन',
-    'admin.product_approvals': 'उत्पादन मंजूरी',
-    'admin.system_health': 'सिस्टम आरोग्य',
-    'common.sign_in': 'साइन इन',
-    'common.sign_up': 'साइन अप',
-    'common.sign_out': 'साइन आउट',
     'common.home': 'होम',
     'common.back': 'मागे',
-    'common.next': 'पुढे',
-    'common.previous': 'मागील',
-    'common.continue': 'सुरू ठेवा',
-    'common.confirm': 'पुष्टी करा',
-    'common.close': 'बंद करा',
-    'common.open': 'उघडा',
-    'messages.welcome_back': 'परत स्वागत आहे!',
-    'messages.goodbye': 'आमचा प्लॅटफॉर्म वापरल्याबद्दल धन्यवाद',
-    'messages.loading_data': 'तुमचा डेटा लोड होत आहे...',
-    'messages.no_results': 'कोणतेही परिणाम आढळले नाहीत',
-    'messages.try_again': 'कृपया पुन्हा प्रयत्न करा',
-    'placeholders.search_products': 'उत्पादने शोधा...',
-    'placeholders.enter_email': 'तुमचा ईमेल टाका',
-    'placeholders.enter_password': 'तुमचा पासवर्ड टाका',
-    'placeholders.enter_name': 'तुमचे नाव टाका',
   },
 };
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('english');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
+  // Load language from user profile in Supabase
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') as Language;
-    if (savedLanguage && translations[savedLanguage]) {
-      setLanguageState(savedLanguage);
-    }
-  }, []);
+    const loadUserLanguage = async () => {
+      if (user) {
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('language')
+            .eq('id', user.id)
+            .single();
 
-  const setLanguage = (lang: Language) => {
+          if (error) {
+            console.error('Error loading user language:', error);
+            setIsLoading(false);
+            return;
+          }
+
+          if (profile?.language && translations[profile.language as Language]) {
+            setLanguageState(profile.language as Language);
+          }
+        } catch (error) {
+          console.error('Error loading user language:', error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    loadUserLanguage();
+  }, [user]);
+
+  const setLanguage = useCallback(async (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('language', lang);
-  };
+    
+    if (user) {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ language: lang })
+          .eq('id', user.id);
 
-  const t = (key: string): string => {
+        if (error) {
+          console.error('Error saving language preference:', error);
+          toast.error('Failed to save language preference');
+        } else {
+          toast.success('Language preference saved');
+        }
+      } catch (error) {
+        console.error('Error saving language preference:', error);
+        toast.error('Failed to save language preference');
+      }
+    }
+  }, [user]);
+
+  const t = useCallback((key: string): string => {
     return translations[language][key as keyof typeof translations[typeof language]] || key;
-  };
+  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, isLoading }}>
       {children}
     </LanguageContext.Provider>
   );
-}
+};
 
 export function useLanguage() {
   const context = useContext(LanguageContext);

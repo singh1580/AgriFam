@@ -5,15 +5,18 @@ import { Menu } from 'lucide-react';
 import { DashboardSection } from '@/hooks/useFarmerDashboard';
 import FarmerProfileDropdown from './FarmerProfileDropdown';
 import FarmerBreadcrumb from './FarmerBreadcrumb';
+import LanguageSelector from './LanguageSelector';
 
 interface FarmerDashboardHeaderProps {
   setSidebarOpen: (open: boolean) => void;
   activeSection: DashboardSection;
+  setActiveSection: (section: DashboardSection) => void;
 }
 
 const FarmerDashboardHeader = ({
   setSidebarOpen,
-  activeSection
+  activeSection,
+  setActiveSection
 }: FarmerDashboardHeaderProps) => {
   return (
     <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
@@ -32,19 +35,26 @@ const FarmerDashboardHeader = ({
               Farmer Dashboard
             </h1>
             <div className="hidden sm:block">
-              <FarmerBreadcrumb activeSection={activeSection} />
+              <FarmerBreadcrumb 
+                activeSection={activeSection} 
+                onSectionChange={setActiveSection}
+              />
             </div>
           </div>
         </div>
         
         <div className="flex items-center space-x-4">
+          <LanguageSelector />
           <FarmerProfileDropdown />
         </div>
       </div>
       
       {/* Mobile breadcrumb */}
       <div className="block sm:hidden px-4 pb-4">
-        <FarmerBreadcrumb activeSection={activeSection} />
+        <FarmerBreadcrumb 
+          activeSection={activeSection} 
+          onSectionChange={setActiveSection}
+        />
       </div>
     </div>
   );

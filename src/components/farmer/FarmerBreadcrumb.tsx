@@ -13,9 +13,10 @@ import { DashboardSection } from '@/hooks/useFarmerDashboard';
 
 interface FarmerBreadcrumbProps {
   activeSection: DashboardSection;
+  onSectionChange?: (section: DashboardSection) => void;
 }
 
-const FarmerBreadcrumb = ({ activeSection }: FarmerBreadcrumbProps) => {
+const FarmerBreadcrumb = ({ activeSection, onSectionChange }: FarmerBreadcrumbProps) => {
   const getSectionInfo = (section: DashboardSection) => {
     switch (section) {
       case 'products':
@@ -39,8 +40,8 @@ const FarmerBreadcrumb = ({ activeSection }: FarmerBreadcrumbProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink 
-              href="/" 
-              className="flex items-center space-x-2 text-gray-600 hover:text-crop-green transition-colors duration-200 font-medium"
+              onClick={() => onSectionChange?.('dashboard')}
+              className="flex items-center space-x-2 text-gray-600 hover:text-crop-green transition-colors duration-200 font-medium cursor-pointer"
             >
               <Home className="h-3 w-3" />
               <span>Home</span>
@@ -58,8 +59,8 @@ const FarmerBreadcrumb = ({ activeSection }: FarmerBreadcrumbProps) => {
             <>
               <BreadcrumbItem>
                 <BreadcrumbLink 
-                  href="#" 
-                  className="text-gray-600 hover:text-crop-green transition-colors duration-200 font-medium"
+                  onClick={() => onSectionChange?.('dashboard')}
+                  className="text-gray-600 hover:text-crop-green transition-colors duration-200 font-medium cursor-pointer"
                 >
                   Dashboard
                 </BreadcrumbLink>

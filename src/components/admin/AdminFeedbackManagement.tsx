@@ -6,10 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { useFeedbackRealtime } from '@/hooks/useFeedbackRealtime';
+import { FeedbackAnalyticsModal } from './feedback/FeedbackAnalyticsModal';
+import { BulkFeedbackActions } from './feedback/BulkFeedbackActions';
+import { FeedbackTemplates } from './feedback/FeedbackTemplates';
 import { 
   MessageSquare, 
   Star, 
@@ -21,7 +26,11 @@ import {
   Reply,
   Search,
   Filter,
-  RefreshCw
+  RefreshCw,
+  BarChart3,
+  MessageTemplate,
+  AlertCircle,
+  TrendingUp
 } from 'lucide-react';
 
 const AdminFeedbackManagement = () => {
@@ -31,8 +40,24 @@ const AdminFeedbackManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
+  const [filterPriority, setFilterPriority] = useState('all');
   const [responseText, setResponseText] = useState('');
   const [submittingResponse, setSubmittingResponse] = useState(false);
+  const [selectedFeedbacks, setSelectedFeedbacks] = useState<string[]>([]);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [sortBy, setSortBy] = useState('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Real-time updates
+  useFeedbackRealtime({
+    onNewFeedback: (feedback) => {
+      console.log('New feedback received:', feedback);
+    },
+    onFeedbackUpdate: (feedback) => {
+      console.log('Feedback updated:', feedback);
+    }
+  });
 
   // Fetch all feedback from the feedback table
   const { data: feedbacks = [], isLoading, refetch } = useQuery({
@@ -162,15 +187,30 @@ const AdminFeedbackManagement = () => {
     }
   };
 
-  // Filter feedbacks
+  // Enhanced filtering and sorting
   const filteredFeedbacks = feedbacks.filter(feedback => {
     const matchesSearch = feedback.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          feedback.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          feedback.user?.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'all' || feedback.status === filterStatus;
     const matchesCategory = filterCategory === 'all' || feedback.category === filterCategory;
+    const matchesPriority = filterPriority === 'all' || feedback.priority === filterPriority;
     
-    return matchesSearch && matchesStatus && matchesCategory;
+    return matchesSearch && matchesStatus && matchesCategory && matchesPriority;
+  }).sort((a, b) => {
+    let aValue = a[sortBy];
+    let bValue = b[sortBy];
+    
+    if (sortBy === 'created_at' || sortBy === 'updated_at') {
+      aValue = new Date(aValue).getTime();
+      bValue = new Date(bValue).getTime();
+    }
+    
+    if (sortOrder === 'asc') {
+      return aValue > bValue ? 1 : -1;
+    } else {
+      return aValue < bValue ? 1 : -1;
+    }
   });
 
   const buyerFeedbacks = filteredFeedbacks.filter(f => f.user_type === 'buyer');
@@ -202,6 +242,22 @@ const AdminFeedbackManagement = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowAnalytics(true)}
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Analytics
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowTemplates(!showTemplates)}
+          >
+            <MessageTemplate className="h-4 w-4 mr-2" />
+            Templates
+          </Button>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
@@ -209,9 +265,9 @@ const AdminFeedbackManagement = () => {
         </div>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
+      {/* Enhanced Statistics */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card className="hover:shadow-md transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-yellow-600" />
@@ -222,7 +278,7 @@ const AdminFeedbackManagement = () => {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5 text-green-600" />
@@ -233,10 +289,21 @@ const AdminFeedbackManagement = () => {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <Star className="h-5 w-5 text-blue-600" />
+              <AlertCircle className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="text-sm text-muted-foreground">Critical</p>
+                <p className="text-xl font-bold">{feedbacks.filter(f => f.priority === 'critical').length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <Star className="h-5 w-5 text-yellow-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Avg Rating</p>
                 <p className="text-xl font-bold">
@@ -249,10 +316,10 @@ const AdminFeedbackManagement = () => {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="h-5 w-5 text-purple-600" />
+              <MessageSquare className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Total</p>
                 <p className="text-xl font-bold">{feedbacks.length}</p>
@@ -262,11 +329,11 @@ const AdminFeedbackManagement = () => {
         </Card>
       </div>
 
-      {/* Filters */}
+      {/* Enhanced Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div className="md:col-span-2">
               <Input
                 placeholder="Search feedback..."
                 value={searchTerm}
@@ -276,7 +343,7 @@ const AdminFeedbackManagement = () => {
             </div>
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger>
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
@@ -288,7 +355,7 @@ const AdminFeedbackManagement = () => {
             </Select>
             <Select value={filterCategory} onValueChange={setFilterCategory}>
               <SelectTrigger>
-                <SelectValue placeholder="Filter by category" />
+                <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
@@ -301,17 +368,76 @@ const AdminFeedbackManagement = () => {
                 <SelectItem value="general_feedback">General Feedback</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={filterPriority} onValueChange={setFilterPriority}>
+              <SelectTrigger>
+                <SelectValue placeholder="Priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Priorities</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="outline" onClick={() => {
               setSearchTerm('');
               setFilterStatus('all');
               setFilterCategory('all');
+              setFilterPriority('all');
             }}>
               <Filter className="h-4 w-4 mr-2" />
-              Clear Filters
+              Clear
+            </Button>
+          </div>
+          
+          {/* Sort Options */}
+          <div className="flex items-center space-x-4 mt-4 pt-4 border-t">
+            <span className="text-sm text-muted-foreground">Sort by:</span>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created_at">Date Created</SelectItem>
+                <SelectItem value="updated_at">Last Updated</SelectItem>
+                <SelectItem value="priority">Priority</SelectItem>
+                <SelectItem value="rating">Rating</SelectItem>
+                <SelectItem value="status">Status</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            >
+              <TrendingUp className={`h-4 w-4 ${sortOrder === 'desc' ? 'rotate-180' : ''}`} />
+              {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Bulk Actions */}
+      <BulkFeedbackActions
+        feedbacks={filteredFeedbacks}
+        selectedFeedbacks={selectedFeedbacks}
+        onSelectionChange={setSelectedFeedbacks}
+      />
+
+      {/* Templates */}
+      {showTemplates && (
+        <Card>
+          <CardContent className="p-4">
+            <FeedbackTemplates
+              onTemplateSelect={(content) => {
+                setResponseText(content);
+                setShowTemplates(false);
+              }}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Feedback Tabs */}
       <Tabs defaultValue="all" className="space-y-6">
@@ -336,9 +462,22 @@ const AdminFeedbackManagement = () => {
                   <CardContent className="p-4">
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-sm">{feedback.subject}</h3>
-                          <p className="text-xs text-muted-foreground">{feedback.user?.full_name} • {feedback.user_type}</p>
+                        <div className="flex items-start space-x-3 flex-1">
+                          <Checkbox
+                            checked={selectedFeedbacks.includes(feedback.id)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setSelectedFeedbacks(prev => [...prev, feedback.id]);
+                              } else {
+                                setSelectedFeedbacks(prev => prev.filter(id => id !== feedback.id));
+                              }
+                            }}
+                            className="mt-1"
+                          />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-sm">{feedback.subject}</h3>
+                            <p className="text-xs text-muted-foreground">{feedback.user?.full_name} • {feedback.user_type}</p>
+                          </div>
                         </div>
                         <div className="flex flex-col items-end space-y-1">
                           <Badge className={getStatusColor(feedback.status)}>
@@ -465,6 +604,13 @@ const AdminFeedbackManagement = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Analytics Modal */}
+      <FeedbackAnalyticsModal
+        isOpen={showAnalytics}
+        onClose={() => setShowAnalytics(false)}
+        timeRange={30}
+      />
 
       {/* Feedback Detail Modal */}
       {selectedFeedback && (

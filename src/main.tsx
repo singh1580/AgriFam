@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { ThemeProvider } from './contexts/ThemeProvider'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider
@@ -12,9 +13,11 @@ createRoot(document.getElementById("root")!).render(
     enableSystem
     disableTransitionOnChange
   >
-    <LanguageProvider>
-      <App />
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
+    </AuthProvider>
   </ThemeProvider>
 );
 

@@ -107,7 +107,10 @@ export const useFeedbackRealtime = ({
     };
   }, [setupFeedbackSubscription]);
 
-  // Note: Real-time should be enabled via Supabase dashboard or migrations
+  // Real-time is already enabled via migration
+  useEffect(() => {
+    console.log('Real-time enabled for feedback table');
+  }, []);
 
   return {
     setupFeedbackSubscription

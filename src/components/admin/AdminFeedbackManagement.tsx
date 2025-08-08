@@ -163,7 +163,7 @@ const AdminFeedbackManagement = () => {
           user_id: feedback?.user_id,
           title: 'Feedback Response',
           message: `Admin has responded to your feedback: "${feedback?.subject}"\n\nResponse: ${responseText}`,
-          type: 'admin_message',
+          type: 'admin_message' as const,
           read: false
         });
 

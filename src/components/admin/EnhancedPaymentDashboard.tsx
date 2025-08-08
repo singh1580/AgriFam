@@ -139,19 +139,21 @@ const EnhancedPaymentDashboard = () => {
 
   const pendingPayments = payments.filter(p => p.status === 'pending');
   const completedPayments = payments.filter(p => p.status === 'paid_to_farmer' || p.status === 'completed');
-  // Fixed payment filtering for aggregated products
-  const buyerPayments = payments.filter(p => 
-    p.buyer_id && 
-    p.buyer && 
-    p.order?.product?.name &&
-    p.payment_method !== 'instant_collection_payment'
+
+  // Classify to avoid overlap between Buyer and Farmer tabs
+  const farmerPayments = payments.filter(p =>
+    p.farmer_id && (
+      p.payment_method === 'instant_collection_payment' ||
+      p.status === 'paid_to_farmer'
+    )
   );
-  
-  // Farmer payments should be for aggregated collections
-  const farmerPayments = payments.filter(p => 
-    p.farmer_id && 
-    p.farmer && 
-    (p.payment_method === 'instant_collection_payment' || p.order?.product?.name)
+  const farmerPaymentIds = new Set(farmerPayments.map(p => p.id));
+
+  const buyerPayments = payments.filter(p =>
+    p.buyer_id &&
+    p.order?.product?.name &&
+    p.payment_method !== 'instant_collection_payment' &&
+    !farmerPaymentIds.has(p.id)
   );
 
   // Calculate stats like collections dashboard

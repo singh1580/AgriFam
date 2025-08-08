@@ -19,7 +19,7 @@ import {
   Clock, 
   XCircle, 
   MessageSquare,
-  SelectAll,
+  CheckSquare,
   Users
 } from 'lucide-react';
 
@@ -115,7 +115,7 @@ export const BulkFeedbackActions = ({
           user_id: feedback.user_id,
           title: 'Feedback Response',
           message: `Admin has responded to your feedback: "${feedback.subject}"\n\nResponse: ${bulkResponse}`,
-          type: 'admin_message',
+          type: 'admin_message' as const,
           read: false
         }));
 
@@ -188,7 +188,7 @@ export const BulkFeedbackActions = ({
                 onClick={handleSelectAll}
                 className="text-xs"
               >
-                <SelectAll className="h-3 w-3 mr-1" />
+                <CheckSquare className="h-3 w-3 mr-1" />
                 {selectedFeedbacks.length === feedbacks.length ? 'Deselect All' : 'Select All'}
               </Button>
               <div className="flex items-center space-x-2">

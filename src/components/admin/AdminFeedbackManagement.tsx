@@ -28,7 +28,7 @@ import {
   Filter,
   RefreshCw,
   BarChart3,
-  MessageTemplate,
+  FileText,
   AlertCircle,
   TrendingUp
 } from 'lucide-react';
@@ -255,7 +255,7 @@ const AdminFeedbackManagement = () => {
             size="sm" 
             onClick={() => setShowTemplates(!showTemplates)}
           >
-            <MessageTemplate className="h-4 w-4 mr-2" />
+            <FileText className="h-4 w-4 mr-2" />
             Templates
           </Button>
           <Button variant="outline" size="sm" onClick={() => refetch()}>

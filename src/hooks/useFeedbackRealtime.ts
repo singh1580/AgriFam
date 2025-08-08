@@ -107,24 +107,7 @@ export const useFeedbackRealtime = ({
     };
   }, [setupFeedbackSubscription]);
 
-  // Enable real-time on the feedback table
-  useEffect(() => {
-    const enableRealtime = async () => {
-      try {
-        // Enable replica identity for real-time updates
-        await supabase.rpc('exec_sql', {
-          sql: `
-            ALTER TABLE feedback REPLICA IDENTITY FULL;
-            ALTER PUBLICATION supabase_realtime ADD TABLE feedback;
-          `
-        });
-      } catch (error) {
-        console.log('Real-time already enabled or insufficient permissions:', error);
-      }
-    };
-
-    enableRealtime();
-  }, []);
+  // Note: Real-time should be enabled via Supabase dashboard or migrations
 
   return {
     setupFeedbackSubscription

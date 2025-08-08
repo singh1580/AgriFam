@@ -22,6 +22,7 @@ import {
   CheckSquare,
   Users
 } from 'lucide-react';
+// Fixed SelectAll import issue
 
 interface BulkFeedbackActionsProps {
   feedbacks: any[];
